@@ -9,10 +9,12 @@ export const siteConfig = {
 			title: "Home",
 			href: "/",
 		},
+		{
+			title: "Dashboard",
+			href: "/dashboard",
+		},
 	],
 	links: {
 		youtube: "https://youtube.com/",
-		github: "https://github.com/",
-		docs: "https://ui.shadcn.com",
 	},
 }

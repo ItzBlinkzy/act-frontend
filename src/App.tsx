@@ -3,9 +3,11 @@ import { useRoutes } from "react-router-dom"
 import { TailwindIndicator } from "./components/tailwind-indicator"
 import Landing from "./components/Landing/Landing"
 import Login from "./components/Login/Login"
+import DashboardHome from "./components/Dashboard/Home"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
+	{ path: "/dashboard", element: <DashboardHome /> },
 ]
 
 function Home() {

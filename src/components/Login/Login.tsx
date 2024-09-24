@@ -1,11 +1,4 @@
-import {
-	Card,
-	CardHeader,
-	CardTitle,
-	CardDescription,
-	CardContent,
-	CardFooter,
-} from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Link } from "react-router-dom"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -26,9 +19,7 @@ const Login = () => {
 				<Card>
 					<CardHeader className="space-y-1 text-center">
 						<CardTitle className="text-2xl">Sign in to your account</CardTitle>
-						<CardDescription>
-							Enter credentials to sign in to your account.
-						</CardDescription>
+						<CardDescription>Enter credentials to sign in to your account.</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-4">
 						<div className="grid gap-2">
@@ -42,11 +33,7 @@ const Login = () => {
 									Forgot password?
 								</Link>
 							</div>
-							<Input
-								id="password"
-								type="password"
-								placeholder="Enter your password"
-							/>
+							<Input id="password" type="password" placeholder="Enter your password" />
 						</div>
 					</CardContent>
 					<CardFooter>
