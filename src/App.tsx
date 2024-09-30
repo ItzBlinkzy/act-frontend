@@ -8,7 +8,6 @@ import Clients from "@/components/Dashboard/Clients/Clients"
 import Ai from "@/components/Dashboard/agentic-ai/Ai"
 import Protected from "./components/Protected"
 import Notifications from "./components/Dashboard/Notifications/Notifications"
-import { useToast } from "@/hooks/use-toast"
 import { Toaster } from "./components/ui/toaster"
 const routes = [
 	{ path: "/", element: <Home /> },
@@ -53,14 +52,13 @@ function Home() {
 
 function App() {
 	const children = useRoutes(routes)
-	const { toasts } = useToast()
 	return (
 		<>
 			<div className="relative flex min-h-screen flex-col overflow-x-hidden">
 				<SiteHeader />
 				<div className="flex-1">{children}</div>
 			</div>
-			<div className="toast-container">
+			<div>
 				<Toaster />
 			</div>
 			<TailwindIndicator />

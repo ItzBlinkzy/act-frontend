@@ -3,7 +3,6 @@ import useStore, { StoreModel } from "@/store/useStore"
 import { useNavigate } from "react-router-dom"
 import { baseUrl } from "@/config/constants"
 import axios from "axios"
-import { Toaster } from "@/components/ui/toaster"
 import { LoadingSpinner } from "./ui/loading-spinner"
 
 interface ProtectedProps {

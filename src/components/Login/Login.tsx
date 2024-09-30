@@ -7,20 +7,14 @@ import { BoxIcon } from "lucide-react"
 import { useState } from "react"
 import { baseUrl } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
-import useStore from "@/store/useStore"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
-import { StoreModel } from "@/store/useStore"
 const Login = () => {
-<<<<<<< Updated upstream
-=======
 	const navigate = useNavigate()
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [loading, setLoading] = useState(false)
-	const user = useStore((state: StoreModel) => state.user)
-	const setUser = useStore((state: StoreModel) => state.setUser)
 
 	const handleEmailChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
 		event.preventDefault()
@@ -44,61 +38,7 @@ const Login = () => {
 			const response = await axios.post(`${baseUrl}/login`, { email, password }, { withCredentials: true })
 			console.log(response.status)
 			if (response.status === 200) {
-				// httpOnly cookie should be set at this point
-				navigate("/dashboard")
-			}
-		} catch (err: any) {
-			if (err.response.status === 401) {
-				toast({
-					title: "Login Failed",
-					description: "Incorrect username or password",
-					variant: "destructive",
-				})
-			} else {
-				toast({
-					title: "Internal Server Error",
-					description: "There was an issue with the server. Try again later.",
-					variant: "destructive",
-				})
-			}
-		} finally {
-			setLoading(false)
-		}
-	}
-
->>>>>>> Stashed changes
-	const navigate = useNavigate()
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [loading, setLoading] = useState(false)
-	const user = useStore((state: StoreModel) => state.user)
-	const setUser = useStore((state: StoreModel) => state.setUser)
-
-	const handleEmailChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-		event.preventDefault()
-		const target = event.target as HTMLInputElement
-		const val = target.value
-
-		setEmail(val)
-	}
-
-	const handlePasswordChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
-		event.preventDefault()
-		const target = event.target as HTMLInputElement
-		const val = target.value
-
-		setPassword(val)
-	}
-
-	const handleLogin = async () => {
-		setLoading(true)
-		try {
-			const response = await axios.post(`${baseUrl}/login`, { email, password }, { withCredentials: true })
-			console.log(response.status)
-			if (response.status === 200) {
-				setUser({
-					...user,
-				})
+				// http only should be set here
 				navigate("/dashboard")
 			}
 		} catch (err: any) {
