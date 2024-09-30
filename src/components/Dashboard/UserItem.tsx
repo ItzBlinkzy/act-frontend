@@ -1,4 +1,13 @@
 import React from "react"
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectLabel,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select"
 
 export default function UserItem() {
 	return (
@@ -6,10 +15,15 @@ export default function UserItem() {
 			<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
 				<p>KI</p>
 			</div>
-			<div className="grow">
-				<p className="text-[16px] font-bold">Kevin Irabor</p>
-				<p className="text-[12px] text-neutral-500">kevin.irabor@mycit.ie</p>
-			</div>
+			<Select>
+				<SelectTrigger className="w-[180px]">
+					<SelectValue placeholder="kevin.irabor@mycit.ie" />
+				</SelectTrigger>
+				<SelectContent>
+					<SelectItem value="email1">johndoe@gmail.com</SelectItem>
+					<SelectItem value="email2">kevin.irabor@mycit.ie</SelectItem>
+				</SelectContent>
+			</Select>
 		</div>
 	)
 }

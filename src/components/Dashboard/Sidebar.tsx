@@ -1,9 +1,10 @@
-import { BellIcon, Settings, SparklesIcon, User } from "lucide-react"
+import { BellIcon, Link, Settings, SparklesIcon, User } from "lucide-react"
 import UserItem from "@/components/Dashboard/UserItem"
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 export default function Sidebar() {
 	const location = useLocation()
+	const navigate = useNavigate()
 	const menuList = [
 		{
 			group: "General",
@@ -43,7 +44,7 @@ export default function Sidebar() {
 	]
 
 	return (
-		<div className="fixed flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r p-4">
+		<div className="flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r p-4">
 			<div>
 				<UserItem />
 			</div>
@@ -59,6 +60,7 @@ export default function Sidebar() {
 										<CommandItem
 											key={optionKey}
 											className={`flex cursor-pointer gap-2 ${isActive ? "bg-gray-300" : ""} hover:text-green-300`}
+											onSelect={() => navigate(option.route)}
 										>
 											{option.icon}
 											{option.text}
