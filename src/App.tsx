@@ -6,14 +6,45 @@ import Login from "@/components/Login/Login"
 import DashboardHome from "@/components/Dashboard/Home"
 import Clients from "@/components/Dashboard/Clients/Clients"
 import Ai from "@/components/Dashboard/agentic-ai/Ai"
-import Notification from "@/components/Dashboard/Notifications/notifications"
+import Protected from "./components/Protected"
+import Notifications from "./components/Dashboard/Notifications/Notifications"
+import { useToast } from "@/hooks/use-toast"
+import { Toaster } from "./components/ui/toaster"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
-	{ path: "/dashboard", element: <DashboardHome /> },
-	{ path: "/dashboard/clients", element: <Clients /> },
-	{ path: "/dashboard/ai", element: <Ai /> },
-	{ path: "/dashboard/notifications", element: <Notification /> },
+	{
+		path: "/dashboard",
+		element: (
+			<Protected>
+				<DashboardHome />
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/clients",
+		element: (
+			<Protected>
+				<Clients />
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/ai",
+		element: (
+			<Protected>
+				<Ai></Ai>
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/notifications",
+		element: (
+			<Protected>
+				<Notifications />
+			</Protected>
+		),
+	},
 ]
 
 function Home() {
@@ -22,12 +53,15 @@ function Home() {
 
 function App() {
 	const children = useRoutes(routes)
-
+	const { toasts } = useToast()
 	return (
 		<>
-			<div className="relative flex min-h-screen flex-col">
+			<div className="relative flex min-h-screen flex-col overflow-x-hidden">
 				<SiteHeader />
 				<div className="flex-1">{children}</div>
+			</div>
+			<div className="toast-container">
+				<Toaster />
 			</div>
 			<TailwindIndicator />
 		</>
