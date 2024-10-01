@@ -19,21 +19,24 @@ const Protected: React.FC<ProtectedProps> = ({ children }) => {
 		const verifyCookie = async () => {
 			try {
 				const response = await axios.get(`${baseUrl}/me`, { withCredentials: true })
-				if (response.data.status === 200) {
+				console.log(response.data)
+				if (response.status === 200) {
 					if (!user?.email) {
 						setUser({
 							...user,
 							email: response.data.email,
-							firstName: response.data.firstName,
-							lastName: response.data.lastName,
+							firstName: response.data.first_name,
+							lastName: response.data.last_name,
 						})
 					}
 					setAuthenticated(true)
 				} else {
 					navigate("/login")
+					setAuthenticated(false)
 				}
 			} catch (err: any) {
 				navigate("/login")
+				setAuthenticated(false)
 			} finally {
 				setLoading(false) // Finish loading
 			}
