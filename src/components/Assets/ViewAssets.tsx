@@ -232,7 +232,7 @@ export default function StocksAndCryptoPage() {
 										dataKey="value"
 										label
 									>
-										{sectorAllocationData.map((entry, index) => (
+										{sectorAllocationData.map((_, index) => (
 											<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 										))}
 									</Pie>
