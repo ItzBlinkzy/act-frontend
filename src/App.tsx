@@ -9,6 +9,7 @@ import Ai from "@/components/Dashboard/agentic-ai/Ai"
 import Protected from "./components/Protected"
 import Notifications from "./components/Dashboard/Notifications/Notifications"
 import { Toaster } from "./components/ui/toaster"
+import ViewAssets from "./components/Assets/ViewAssets"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
@@ -37,6 +38,14 @@ const routes = [
 		),
 	},
 	{
+		path: "/dashboard/assets",
+		element: (
+			<Protected>
+				<ViewAssets />
+			</Protected>
+		),
+	},
+	{
 		path: "/dashboard/notifications",
 		element: (
 			<Protected>
@@ -56,7 +65,7 @@ function App() {
 		<>
 			<div className="relative flex min-h-screen flex-col overflow-x-hidden">
 				<SiteHeader />
-				<div className="flex-1">{children}</div>
+				{children}
 			</div>
 			<div>
 				<Toaster />

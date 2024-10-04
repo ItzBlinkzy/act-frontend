@@ -1,29 +1,68 @@
 import React from "react"
 import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select"
-
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { toast } from "@/hooks/use-toast"
+import { baseUrl } from "@/config/constants"
+import axios from "axios"
+import useStore, { StoreModel } from "@/store/useStore"
+import { Badge } from "@/components/ui/badge"
+import { useNavigate } from "react-router-dom"
+import { MenuIcon } from "lucide-react"
 export default function UserItem() {
+	const navigate = useNavigate()
+	const user = useStore((state: StoreModel) => state.user)
+	let initials = "??"
+	if (user?.firstName.length || user?.lastName.length) {
+		initials = (user.firstName[0] + user.lastName[0]).toLocaleUpperCase()
+	}
+	const handleLogout = async () => {
+		try {
+			const response = await axios.post(`${baseUrl}/logout`, {}, { withCredentials: true })
+			if (response.status === 200) {
+				navigate("/login")
+				toast({
+					title: "Signed Out Successfully",
+					description: "You have been signed out of your account.",
+					variant: "default",
+				})
+			}
+		} catch (err: any) {
+			toast({
+				title: "Internal Server Error ",
+				description: "Could not log you out. Please try again later",
+				variant: "destructive",
+			})
+		}
+	}
+
 	return (
-		<div className="flex items-center justify-between gap-2 rounded-[8px] border p-2">
-			<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
-				<p>KI</p>
-			</div>
-			<Select>
-				<SelectTrigger className="w-[180px]">
-					<SelectValue placeholder="kevin.irabor@mycit.ie" />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value="email1">johndoe@gmail.com</SelectItem>
-					<SelectItem value="email2">kevin.irabor@mycit.ie</SelectItem>
-				</SelectContent>
-			</Select>
-		</div>
+		<DropdownMenu>
+			<DropdownMenuTrigger className="flex w-full">
+				<div className="flex w-full max-w-full items-center gap-3 break-words rounded-[8px] border p-2 hover:bg-secondary">
+					<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
+						<p>{initials}</p>
+					</div>
+					<div className="flex flex-col rounded-md p-2 text-left outline-slate-500 hover:bg-secondary">
+						<Badge className="bg-blue-600 font-bold text-white">{user?.userType}</Badge>
+						{user?.email}
+					</div>
+					<DropdownMenuContent>
+						<DropdownMenuLabel>My Account</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem className="cursor-pointer ">Open Settings</DropdownMenuItem>
+						<DropdownMenuItem className="cursor-pointer font-bold text-destructive" onClick={handleLogout}>
+							Sign Out
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+					<MenuIcon />
+				</div>
+			</DropdownMenuTrigger>
+		</DropdownMenu>
 	)
 }

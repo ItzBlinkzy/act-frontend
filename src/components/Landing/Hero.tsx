@@ -16,10 +16,16 @@ const Hero = () => {
 						</p>
 					</div>
 					<div className="flex w-full items-center justify-center gap-5">
-						<button className="bg-green-300 p-2 outline outline-1 outline-slate-400" onClick={() => navigate("/login")}>
+						<button
+							className="bg-green-300 p-2 outline outline-1 outline-slate-400"
+							onClick={() => navigate("/dashboard")}
+						>
 							Get Started
 						</button>
-						<button className="bg-green-300 p-2 outline outline-1 outline-slate-400" onClick={() => navigate("/login")}>
+						<button
+							className="bg-green-300 p-2 outline outline-1 outline-slate-400"
+							onClick={() => navigate("/dashboard")}
+						>
 							Learn More
 						</button>
 					</div>

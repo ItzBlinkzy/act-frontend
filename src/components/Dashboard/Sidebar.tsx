@@ -1,7 +1,8 @@
-import { BellIcon, Link, Settings, SparklesIcon, User } from "lucide-react"
+import { BellIcon, Settings, SparklesIcon, User, Users2 } from "lucide-react"
 import UserItem from "@/components/Dashboard/UserItem"
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { useLocation, useNavigate } from "react-router-dom"
+import { Eye } from "lucide-react"
 export default function Sidebar() {
 	const location = useLocation()
 	const navigate = useNavigate()
@@ -16,7 +17,7 @@ export default function Sidebar() {
 				},
 				{
 					route: "/dashboard/clients",
-					icon: <User />,
+					icon: <Users2 />,
 					text: "Clients",
 				},
 				{
@@ -25,9 +26,19 @@ export default function Sidebar() {
 					text: "Agentic AI",
 				},
 				{
-					route: "/dashboard/notifcations",
+					route: "/dashboard/notifications",
 					icon: <BellIcon />,
 					text: "Notifications",
+				},
+			],
+		},
+		{
+			group: "Assets",
+			items: [
+				{
+					route: "/dashboard/assets",
+					icon: <Eye />,
+					text: "Stocks & Crypto",
 				},
 			],
 		},
@@ -44,7 +55,7 @@ export default function Sidebar() {
 	]
 
 	return (
-		<div className="flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r p-4">
+		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r p-4">
 			<div>
 				<UserItem />
 			</div>
@@ -72,7 +83,6 @@ export default function Sidebar() {
 					</CommandList>
 				</Command>
 			</div>
-			<div>Settings / Notifications</div>
 		</div>
 	)
 }

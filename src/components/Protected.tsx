@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 import { baseUrl } from "@/config/constants"
 import axios from "axios"
 import { LoadingSpinner } from "./ui/loading-spinner"
-
+import { mapUserIDType } from "@/lib/utils"
 interface ProtectedProps {
 	children: React.ReactNode
 }
@@ -27,6 +27,7 @@ const Protected: React.FC<ProtectedProps> = ({ children }) => {
 							email: response.data.email,
 							firstName: response.data.first_name,
 							lastName: response.data.last_name,
+							userType: mapUserIDType(response.data.type_user_id) || null,
 						})
 					}
 					setAuthenticated(true)

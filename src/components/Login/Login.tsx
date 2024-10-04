@@ -61,47 +61,55 @@ const Login = () => {
 	}
 
 	return (
-		<div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
-			<div className="mx-auto w-full max-w-md space-y-6">
-				<div className="flex items-center justify-center">
-					<Link to="/" className="flex items-center">
-						<BoxIcon className="ml-2 text-2xl font-bold"></BoxIcon>
-						{/* <MountainIcon className="h-8 w-8" /> */}
-						<span className="ml-2 text-2xl font-bold">ACT App</span>
-					</Link>
-				</div>
-				<Card>
-					<CardHeader className="space-y-1 text-center">
-						<CardTitle className="text-2xl">Sign in to your account</CardTitle>
-						<CardDescription>Enter credentials to sign in to your account.</CardDescription>
-					</CardHeader>
-					<CardContent className="space-y-4">
-						<div className="grid gap-2">
-							<Label htmlFor="email">Email</Label>
-							<Input id="email" placeholder="Enter your email" onChange={handleEmailChange} />
-						</div>
-						<div className="grid gap-2">
-							<div className="flex items-center justify-between">
-								<Label htmlFor="password">Password</Label>
-								<Link to="/" className="text-sm text-primary hover:underline">
-									Forgot password?
-								</Link>
+		<div>
+      
+			<div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
+				<div className="mx-auto w-full max-w-md space-y-6">
+					<div className="flex items-center justify-center">
+						<Link to="/" className="flex items-center">
+							<BoxIcon className="ml-2 text-2xl font-bold"></BoxIcon>
+							{/* <MountainIcon className="h-8 w-8" /> */}
+							<span className="ml-2 text-2xl font-bold">ACT App</span>
+						</Link>
+					</div>
+					<Card>
+						<CardHeader className="space-y-1 text-center">
+							<CardTitle className="text-2xl">Sign in to your account</CardTitle>
+							<CardDescription>Enter credentials to sign in to your account.</CardDescription>
+						</CardHeader>
+						<CardContent className="space-y-4">
+							<div className="grid gap-2">
+								<Label htmlFor="email">Email</Label>
+								<Input id="email" placeholder="Enter your email" onChange={handleEmailChange} />
 							</div>
-							<Input id="password" type="password" placeholder="Enter your password" onChange={handlePasswordChange} />
-						</div>
-					</CardContent>
-					<CardFooter>
-						<Button type="submit" className="w-full" onClick={handleLogin} disabled={loading}>
-							{!loading && "Sign In"}
-							{loading && <LoadingSpinner />}
-						</Button>
-					</CardFooter>
-				</Card>
-				<div className="text-center text-sm text-muted-foreground">
-					Don&apos;t have an account?{" "}
-					<Link to="/" className="font-medium text-primary hover:underline">
-						Sign up
-					</Link>
+							<div className="grid gap-2">
+								<div className="flex items-center justify-between">
+									<Label htmlFor="password">Password</Label>
+									<Link to="/" className="text-sm text-primary hover:underline">
+										Forgot password?
+									</Link>
+								</div>
+								<Input
+									id="password"
+									type="password"
+									placeholder="Enter your password"
+									onChange={handlePasswordChange}
+								/>
+							</div>
+						</CardContent>
+						<CardFooter>
+							<Button type="submit" className="w-full" onClick={handleLogin} disabled={loading}>
+								{!loading && "Sign In"}
+								{loading && <LoadingSpinner />}
+							</Button>
+						</CardFooter>
+					</Card>
+					<div className="text-center text-sm text-muted-foreground">
+						Don&apos;t have an account?{" "}
+						<Link to="/" className="font-medium text-primary hover:underline">
+							Sign up
+						</Link>
+					</div>
 				</div>
 			</div>
 		</div>
