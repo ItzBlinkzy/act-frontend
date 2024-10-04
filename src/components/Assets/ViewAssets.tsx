@@ -134,6 +134,7 @@ const sectorAllocationData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export default function StocksAndCryptoPage() {
+	// eslint-disable-next-line
 	const [stocks, setStocks] = useState<Stock[]>(initialStocks)
 	const [filteredStocks, setFilteredStocks] = useState<Stock[]>(initialStocks)
 	const [searchTerm, setSearchTerm] = useState("")
