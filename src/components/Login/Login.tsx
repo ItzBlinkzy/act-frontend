@@ -16,6 +16,13 @@ const Login = () => {
 	const [password, setPassword] = useState("")
 	const [loading, setLoading] = useState(false)
 
+	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+		if (event.key === "Enter") {
+			event.preventDefault()
+			handleLogin()
+		}
+	}
+
 	const handleEmailChange = (event: React.SyntheticEvent<HTMLInputElement>) => {
 		event.preventDefault()
 		const target = event.target as HTMLInputElement
@@ -62,7 +69,6 @@ const Login = () => {
 
 	return (
 		<div>
-      
 			<div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
 				<div className="mx-auto w-full max-w-md space-y-6">
 					<div className="flex items-center justify-center">
@@ -93,6 +99,7 @@ const Login = () => {
 									id="password"
 									type="password"
 									placeholder="Enter your password"
+									onKeyDown={handleKeyDown}
 									onChange={handlePasswordChange}
 								/>
 							</div>
