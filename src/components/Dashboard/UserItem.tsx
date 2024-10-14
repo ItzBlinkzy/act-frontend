@@ -21,6 +21,10 @@ export default function UserItem() {
 	if (user?.firstName.length || user?.lastName.length) {
 		initials = (user.firstName[0] + user.lastName[0]).toLocaleUpperCase()
 	}
+	const getBadgeColour = (): string => {
+		if (user?.userType === "Fund Manager") return "bg-orange-400"
+		return "bg-blue-600"
+	}
 	const handleLogout = async () => {
 		try {
 			const response = await axios.post(`${baseUrl}/logout`, {}, { withCredentials: true })
@@ -48,8 +52,8 @@ export default function UserItem() {
 					<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
 						<p>{initials}</p>
 					</div>
-					<div className="flex flex-col rounded-md p-2 text-left outline-slate-500 hover:bg-secondary">
-						<Badge className="bg-blue-600 font-bold text-white">{user?.userType}</Badge>
+					<div className="flex flex-col rounded-md p-2 text-center outline-slate-500 hover:bg-secondary">
+						<Badge className={`${getBadgeColour()} font-bold text-white `}>{user?.userType}</Badge>
 						{user?.email}
 					</div>
 					<DropdownMenuContent>

@@ -3,7 +3,11 @@ import UserItem from "@/components/Dashboard/UserItem"
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command"
 import { useLocation, useNavigate } from "react-router-dom"
 import { Eye } from "lucide-react"
+import useStore, { StoreModel } from "@/store/useStore"
 export default function Sidebar() {
+	const user = useStore((state: StoreModel) => state.user)
+	const isFundManager = user?.userType === "Fund Manager"
+
 	const location = useLocation()
 	const navigate = useNavigate()
 	const menuList = [
@@ -14,21 +18,25 @@ export default function Sidebar() {
 					route: "/dashboard",
 					icon: <User />,
 					text: "Profile",
+					requiresFundManager: false,
 				},
 				{
 					route: "/dashboard/clients",
 					icon: <Users2 />,
 					text: "Clients",
+					requiresFundManager: true,
 				},
 				{
 					route: "/dashboard/ai",
 					icon: <SparklesIcon />,
 					text: "Agentic AI",
+					requiresFundManager: false,
 				},
 				{
 					route: "/dashboard/notifications",
 					icon: <BellIcon />,
 					text: "Notifications",
+					requiresFundManager: false,
 				},
 			],
 		},
@@ -65,6 +73,10 @@ export default function Sidebar() {
 						{menuList.map((menu: any, key: number) => (
 							<CommandGroup key={key} heading={menu.group}>
 								{menu.items.map((option: any, optionKey: number) => {
+									if (!isFundManager && option.requiresFundManger) {
+										return null
+									}
+
 									const isActive = location.pathname === option.route
 									console.log(location.pathname, option.route)
 									return (

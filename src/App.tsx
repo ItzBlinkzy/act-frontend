@@ -10,9 +10,11 @@ import Protected from "./components/Protected"
 import Notifications from "./components/Dashboard/Notifications/Notifications"
 import { Toaster } from "./components/ui/toaster"
 import ViewAssets from "./components/Assets/ViewAssets"
+import SignUp from "./components/Registration/SignUp"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
+  { path: "/sign-up", element: <SignUp/>},
 	{
 		path: "/dashboard",
 		element: (
