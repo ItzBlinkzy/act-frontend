@@ -10,21 +10,9 @@ import axios from "axios"
 import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import { LucideGithub } from "lucide-react"
-import { useLocation } from "react-router-dom"
+
 const Login = () => {
 	const navigate = useNavigate()
-	const location = useLocation()
-
-	// Function to extract query parameters from the URL
-	const getQueryParams = (search: string) => {
-		const params = new URLSearchParams(search)
-		return {
-			email: params.get("email"),
-		}
-	}
-
-	const queryParams = getQueryParams(location.search)
-
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [loading, setLoading] = useState(false)
@@ -109,12 +97,7 @@ const Login = () => {
 						</div>
 						<div className="grid gap-2">
 							<Label htmlFor="email">Email</Label>
-							<Input
-								id="email"
-								placeholder="Enter your email"
-								onChange={handleEmailChange}
-								defaultValue={queryParams.email || ""}
-							/>
+							<Input id="email" placeholder="Enter your email" onChange={handleEmailChange} />
 						</div>
 						<div className="grid gap-2">
 							<div className="flex items-center justify-between">
