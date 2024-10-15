@@ -26,20 +26,20 @@ export default function SignUp() {
 		manager: "A Fund Manager manages assets for multiple clients",
 	}
 	const getInfoText = (): string => {
-		if (formData.TypeUserId === 1) {
+		if (formData.type_user_id === 1) {
 			return fundAdminClientTexts.administrator
-		} else if (formData.TypeUserId === 2) {
+		} else if (formData.type_user_id === 2) {
 			return fundAdminClientTexts.manager
 		}
 		return ""
 	}
 
 	const [formData, setFormData] = useState({
-		FirstName: "",
-		LastName: "",
-		Email: "",
-		Password: "",
-		TypeUserId: 0, // typeUserId for account type
+		first_name: "",
+		last_name: "",
+		email: "",
+		password: "",
+		type_user_id: 0, // type_user_id for account type
 	})
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -48,7 +48,7 @@ export default function SignUp() {
 	}
 
 	const handleSelectChange = (value: string) => {
-		setFormData({ ...formData, TypeUserId: parseInt(value, 10) })
+		setFormData({ ...formData, type_user_id: parseInt(value, 10) })
 	}
 
 	const containsDigit = (str: string) => /\d/.test(str)
@@ -58,11 +58,11 @@ export default function SignUp() {
 		let valid = true
 
 		if (
-			formData.FirstName.trim() === "" ||
-			formData.LastName.trim() === "" ||
-			formData.Email.trim() === "" ||
-			formData.Password.trim() === "" ||
-			formData.TypeUserId === 0
+			formData.first_name.trim() === "" ||
+			formData.last_name.trim() === "" ||
+			formData.email.trim() === "" ||
+			formData.password.trim() === "" ||
+			formData.type_user_id === 0
 		) {
 			toast({
 				title: "Missing Information",
@@ -73,22 +73,22 @@ export default function SignUp() {
 		}
 
 		if (
-			formData.Password.length < 6 ||
-			formData.Password.length > 20 ||
-			!containsDigit(formData.Password) ||
-			!containsLetter(formData.Password)
+			formData.password.length < 6 ||
+			formData.password.length > 20 ||
+			!containsDigit(formData.password) ||
+			!containsLetter(formData.password)
 		) {
 			toast({
-				title: "Invalid Password",
-				description: "Password must be 6-20 characters long, include at least one letter and one number",
+				title: "Invalid password",
+				description: "password must be 6-20 characters long, include at least one letter and one number",
 				variant: "destructive",
 			})
 			valid = false
 		}
 
-		if (!/\S+@\S+\.\S+/.test(formData.Email)) {
+		if (!/\S+@\S+\.\S+/.test(formData.email)) {
 			toast({
-				title: "Invalid Email",
+				title: "Invalid email",
 				description: "Please enter a valid email address",
 				variant: "destructive",
 			})
@@ -106,10 +106,6 @@ export default function SignUp() {
 
 			try {
 				const response = await axios.post(`${baseUrl}/register-user`, formData, {
-					headers: {
-						Authorization: "", // Empty Authorization header or malformed jwt is returned
-						"Content-Type": "application/json",
-					},
 					withCredentials: true,
 				})
 
@@ -120,7 +116,7 @@ export default function SignUp() {
 						variant: "default",
 					})
 
-					navigate(`/login?email=${formData.Email}`)
+					navigate(`/login?email=${formData.email}`)
 					setLoading(false)
 					return
 				}
@@ -149,35 +145,41 @@ export default function SignUp() {
 				<CardContent className="grid gap-4">
 					<div className="flex w-full flex-col justify-between gap-4">
 						<div className="grid gap-2">
-							<Label htmlFor="FirstName">First Name</Label>
-							<Input id="FirstName" type="text" placeholder="John" value={formData.FirstName} onChange={handleChange} />
+							<Label htmlFor="first_name">First Name</Label>
+							<Input
+								id="first_name"
+								type="text"
+								placeholder="John"
+								value={formData.first_name}
+								onChange={handleChange}
+							/>
 						</div>
 						<div className="grid gap-2">
-							<Label htmlFor="LastName">Last Name</Label>
-							<Input id="LastName" type="text" placeholder="Doe" value={formData.LastName} onChange={handleChange} />
+							<Label htmlFor="last_name">Last Name</Label>
+							<Input id="last_name" type="text" placeholder="Doe" value={formData.last_name} onChange={handleChange} />
 						</div>
 					</div>
 					<div className="grid gap-2">
-						<Label htmlFor="Email">Email</Label>
+						<Label htmlFor="email">Email</Label>
 						<Input
-							id="Email"
+							id="email"
 							type="email"
 							placeholder="john@email.com"
-							value={formData.Email}
+							value={formData.email}
 							onChange={handleChange}
 						/>
 					</div>
 					<div className="grid gap-2">
-						<Label htmlFor="typeUserId">Account Type</Label>
+						<Label htmlFor="type_user_id">Account Type</Label>
 						<Select onValueChange={handleSelectChange}>
 							<SelectTrigger>
-								{formData.TypeUserId === 1
+								{formData.type_user_id === 1
 									? "Fund Administrator"
-									: formData.TypeUserId === 2
+									: formData.type_user_id === 2
 										? "Fund Manager"
 										: "Select Account Type"}
 							</SelectTrigger>
-							{formData.TypeUserId !== 0 && (
+							{formData.type_user_id !== 0 && (
 								<SelectGroup className="flex">
 									<InfoIcon className="text-muted-foreground" />
 									<SelectLabel className="px-4 py-0 text-sm italic text-muted-foreground">{getInfoText()}</SelectLabel>
@@ -190,8 +192,8 @@ export default function SignUp() {
 						</Select>
 					</div>
 					<div className="grid gap-2" onKeyDown={handleKeyDown}>
-						<Label htmlFor="Password">Password</Label>
-						<Input id="Password" type="password" value={formData.Password} onChange={handleChange} />
+						<Label htmlFor="password">Password</Label>
+						<Input id="password" type="password" value={formData.password} onChange={handleChange} />
 					</div>
 				</CardContent>
 				<CardFooter>
