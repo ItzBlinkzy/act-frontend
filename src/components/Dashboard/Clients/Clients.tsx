@@ -62,8 +62,8 @@ const performanceData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 const Clients = () => {
 	// retrieve from API later
-	const [clients, setClients] = useState<Client[]>(mockClients)
-	const [assets, setAssets] = useState<Asset[]>(mockAssets)
+	const [clients] = useState<Client[]>(mockClients)
+	const [assets] = useState<Asset[]>(mockAssets)
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [selectedClient, setSelectedClient] = useState<Client | null>(null)
 	const user = useStore((state) => state.user)
@@ -117,7 +117,7 @@ const Clients = () => {
 											dataKey="value"
 											label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
 										>
-											{assets.map((entry, index) => (
+											{assets.map((_, index) => (
 												<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
 											))}
 										</Pie>
