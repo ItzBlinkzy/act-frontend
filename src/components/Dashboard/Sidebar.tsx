@@ -78,7 +78,11 @@ export default function Sidebar() {
 									}
 
 									const isActive = location.pathname === option.route
-									console.log(location.pathname, option.route)
+									// skip any navigation options that require fund manager abilities unless they are a fund manager.
+									if (option.requiresFundManager && user?.userType !== "Fund Manager") {
+										return
+									}
+                  
 									return (
 										<CommandItem
 											key={optionKey}

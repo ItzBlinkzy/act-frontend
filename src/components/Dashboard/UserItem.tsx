@@ -53,7 +53,7 @@ export default function UserItem() {
 						<p>{initials}</p>
 					</div>
 					<div className="flex flex-col rounded-md p-2 text-center outline-slate-500 hover:bg-secondary">
-						<Badge className={`${getBadgeColour()} font-bold text-white `}>{user?.userType}</Badge>
+						<Badge className={`${getBadgeColour()} font-bold text-white`}>{user?.userType}</Badge>
 						{user?.email}
 					</div>
 					<DropdownMenuContent>

@@ -14,7 +14,7 @@ import SignUp from "./components/Registration/SignUp"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
-  { path: "/sign-up", element: <SignUp/>},
+	{ path: "/sign-up", element: <SignUp /> },
 	{
 		path: "/dashboard",
 		element: (
@@ -26,7 +26,7 @@ const routes = [
 	{
 		path: "/dashboard/clients",
 		element: (
-			<Protected>
+			<Protected fundManagerOnly>
 				<Clients />
 			</Protected>
 		),

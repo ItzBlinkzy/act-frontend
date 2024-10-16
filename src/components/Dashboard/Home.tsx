@@ -60,7 +60,7 @@ const DashboardHome = () => {
 						<HomeIcon />
 					</div>
 					<CardHeader>
-						<CardTitle className="text-3xl font-normal p-0">
+						<CardTitle className="p-0 text-3xl font-normal">
 							Welcome back, <span>{user?.firstName}</span>
 						</CardTitle>
 					</CardHeader>

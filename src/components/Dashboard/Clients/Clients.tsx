@@ -130,8 +130,7 @@ const Clients = () => {
 					<Tabs defaultValue="overview" className="mb-6">
 						<TabsList>
 							<TabsTrigger value="overview">Overview</TabsTrigger>
-							<TabsTrigger value="assets">Assets</TabsTrigger>
-							{isFundManager && <TabsTrigger value="clients">Clients</TabsTrigger>}
+							{<TabsTrigger value="clients">Clients</TabsTrigger>}
 						</TabsList>
 						<TabsContent value="overview">
 							<Card>

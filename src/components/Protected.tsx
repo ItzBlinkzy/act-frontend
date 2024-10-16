@@ -5,10 +5,12 @@ import { baseUrl } from "@/config/constants"
 import axios from "axios"
 import { LoadingSpinner } from "./ui/loading-spinner"
 import { mapUserIDType } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 interface ProtectedProps {
 	children: React.ReactNode
+	fundManagerOnly?: boolean
 }
-const Protected: React.FC<ProtectedProps> = ({ children }) => {
+const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false }) => {
 	const [authenticated, setAuthenticated] = useState(false)
 	const [loading, setLoading] = useState(true) // Loading state
 	const user = useStore((state: StoreModel) => state.user)
@@ -55,8 +57,30 @@ const Protected: React.FC<ProtectedProps> = ({ children }) => {
 		)
 	}
 
-	// Only render children when authenticated
-	return authenticated ? <>{children}</> : null
+	// Fund manager only view
+	if (fundManagerOnly) {
+		if (user?.userType === "Fund Manager" && authenticated) {
+			return <>{children}</>
+		}
+		// redirect
+		toast({
+			title: "Unauthorised",
+			description: "Only fund managers can view this page.",
+			variant: "default",
+		})
+
+		navigate("/dashboard")
+		return
+	}
+
+	// General authenticated view
+	return authenticated ? (
+		<>{children}</>
+	) : (
+		<div className="flex h-screen w-full items-center justify-center">
+			<p className="text-red-600">You are not authenticated.</p>
+		</div>
+	)
 }
 
 export default Protected
