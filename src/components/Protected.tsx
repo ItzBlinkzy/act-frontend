@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react"
 import useStore, { StoreModel } from "@/store/useStore"
 import { useNavigate } from "react-router-dom"
-import { baseUrl } from "@/config/constants"
+import { baseAPIURL } from "@/config/constants"
 import axios from "axios"
 import { LoadingSpinner } from "./ui/loading-spinner"
 import { mapUserIDType } from "@/lib/utils"
@@ -20,7 +20,7 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 	useEffect(() => {
 		const verifyCookie = async () => {
 			try {
-				const response = await axios.get(`${baseUrl}/me`, { withCredentials: true })
+				const response = await axios.get(`${baseAPIURL}/me`, { withCredentials: true })
 				console.log(response.data)
 				if (response.status === 200) {
 					if (!user?.email) {

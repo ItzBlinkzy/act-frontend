@@ -9,7 +9,7 @@ import { toast } from "@/hooks/use-toast"
 import { InfoIcon } from "lucide-react"
 import { SelectGroup, SelectLabel } from "@radix-ui/react-select"
 import axios from "axios"
-import { baseUrl } from "@/config/constants"
+import { baseAPIURL } from "@/config/constants"
 import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
 export default function SignUp() {
@@ -105,7 +105,7 @@ export default function SignUp() {
 			console.log("Form data:", formData)
 
 			try {
-				const response = await axios.post(`${baseUrl}/register-user`, formData, {
+				const response = await axios.post(`${baseAPIURL}/register-user`, formData, {
 					withCredentials: true,
 				})
 

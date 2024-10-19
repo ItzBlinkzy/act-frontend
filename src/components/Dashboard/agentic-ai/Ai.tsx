@@ -16,6 +16,8 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import Sidebar from "../Sidebar"
+import { baseAPIURL } from "@/config/constants"
+import axios from "axios"
 
 interface Recommendation {
 	id: string
@@ -92,6 +94,11 @@ export default function RecommendationsPage() {
 		try {
 			// Simulating API call with sample data
 			await new Promise((resolve) => setTimeout(resolve, 1000))
+
+			// get all stocks currently invested in and instantly get recommendations on all of them.
+
+			// be able to get recommendations on all stock whether you own it or not with search.
+
 			const filteredRecommendations = sampleRecommendations.filter(
 				(rec) =>
 					rec.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -171,7 +178,9 @@ export default function RecommendationsPage() {
 				<Card>
 					<CardHeader>
 						<CardTitle>Recommendations</CardTitle>
-						<CardDescription>Based on current market analysis and AI predictions</CardDescription>
+						<CardDescription>
+							Recommendations of your current portfolio based on current market analysis and AI Predictions
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						{isLoading ? (

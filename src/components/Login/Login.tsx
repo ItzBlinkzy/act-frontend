@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
-import { baseUrl } from "@/config/constants"
+import { baseAPIURL } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
 import { useNavigate } from "react-router-dom"
@@ -43,7 +43,7 @@ const Login = () => {
 	const handleLogin = async () => {
 		setLoading(true)
 		try {
-			const response = await axios.post(`${baseUrl}/login`, { email, password }, { withCredentials: true })
+			const response = await axios.post(`${baseAPIURL}/login`, { email, password }, { withCredentials: true })
 			console.log(response.status)
 			if (response.status === 200) {
 				// http only should be set here
