@@ -1,12 +1,25 @@
 import Sidebar from "@/components/Dashboard/Sidebar"
-import React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { useNavigate } from "react-router-dom"
 import useStore from "@/store/useStore"
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog"
+
+import axios from "axios"
 import {
 	LineChart,
 	Line,
@@ -20,12 +33,16 @@ import {
 	Pie,
 	Cell,
 } from "recharts"
-interface Client {
+import { baseAPIURL } from "@/config/constants"
+import { toast } from "@/hooks/use-toast"
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
+
+interface IClient {
 	id: string
-	name: string
-	assets: number
-	performance: number
-	lastUpdated: string
+	company_name: string
+	created_at: string
+	updated_at: string
+	deleted_at: Date | null
 }
 
 interface Asset {
@@ -33,15 +50,6 @@ interface Asset {
 	value: number
 	change: number
 }
-
-const mockClients: Client[] = [
-	{ id: "1", name: "TechCorp", assets: 5000000, performance: 7.2, lastUpdated: "2024-03-15" },
-	{ id: "2", name: "InnovateTech", assets: 3500000, performance: 5.8, lastUpdated: "2024-03-14" },
-	{ id: "3", name: "FutureSystems", assets: 4200000, performance: 6.5, lastUpdated: "2024-03-13" },
-	{ id: "4", name: "AI Solutions", assets: 2800000, performance: 8.1, lastUpdated: "2024-03-15" },
-	{ id: "5", name: "DataDrive Inc.", assets: 3900000, performance: 4.9, lastUpdated: "2024-03-14" },
-]
-
 const mockAssets: Asset[] = [
 	{ name: "AAPL", value: 1500000, change: 2.3 },
 	{ name: "GOOGL", value: 1200000, change: -1.5 },
@@ -62,25 +70,99 @@ const performanceData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 const Clients = () => {
 	// retrieve from API later
-	const [clients] = useState<Client[]>(mockClients)
-	const [assets] = useState<Asset[]>(mockAssets)
-	const [isDialogOpen, setIsDialogOpen] = useState(false)
-	const [selectedClient, setSelectedClient] = useState<Client | null>(null)
 	const user = useStore((state) => state.user)
+	const navigate = useNavigate()
+
+	const [assets] = useState<Asset[]>(mockAssets)
+	const [loading, setLoading] = useState(false)
+	const [currentClients, setCurrentClients] = useState<IClient[]>([])
+	const [alertDialogOpen, setAlertDialogOpen] = useState(false)
+	const [clientToDelete, setClientToDelete] = useState<null | IClient>(null)
+
+	const handleClientSelect = (client: IClient) => {
+		navigate(`/dashboard/clients/${client.id}`)
+	}
+
+	const handleDeleteClient = async (client: IClient | null) => {
+		if (!client) return
+		setLoading(true)
+		try {
+			const response = await axios.delete(`${baseAPIURL}/delete-client/${client.id}`, { withCredentials: true })
+			// successfully deleted client send toast
+			if (response.status === 200) {
+				toast({
+					title: `Client successfully deleted.`,
+					description: `${client.company_name} was successfully deleted.`,
+					variant: "default",
+				})
+			}
+		} catch (e: any) {
+			console.log(e)
+			toast({
+				title: "Internal Server Error",
+				description: `Could not fetch delete client - ${client.company_name}. Try again later.`,
+				variant: "destructive",
+			})
+		} finally {
+			setLoading(false)
+		}
+		setLoading(false)
+	}
+
+	useEffect(() => {
+		if (!user?.id) return // Ensure user is available
+
+		setLoading(true)
+		const getCurrentClients = async () => {
+			try {
+				const response = await axios.get(`${baseAPIURL}/list-clients/${user!.id}`, { withCredentials: true })
+
+				if (response.status === 200) {
+					setCurrentClients(response.data)
+				}
+			} catch (e: any) {
+				console.log(e)
+				toast({
+					title: "Internal Server Error",
+					description: "Could not fetch current clients. Try again later.",
+					variant: "destructive",
+				})
+			} finally {
+				setLoading(false)
+			}
+		}
+
+		getCurrentClients()
+	}, [user])
 
 	const isFundManager = user?.userType === "Fund Manager"
 
 	const totalAssets = assets.reduce((sum: number, asset: Asset) => sum + asset.value, 0)
 
-	const handleClientSelect = (client: Client) => {
-		setSelectedClient(client)
-		setIsDialogOpen(true)
-	}
-
 	return (
 		<>
 			<div className="flex">
 				<Sidebar />
+				<AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
+					<AlertDialogContent>
+						<AlertDialogHeader>
+							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+							<AlertDialogDescription>
+								This action cannot be undone. This will permanently delete your client and remove their data from our
+								servers.
+							</AlertDialogDescription>
+						</AlertDialogHeader>
+						<AlertDialogFooter>
+							<AlertDialogCancel onClick={() => setAlertDialogOpen(false)}>Cancel</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={() => handleDeleteClient(clientToDelete)}
+								className="bg-destructive text-destructive-foreground"
+							>
+								Delete
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
 				<div className="container mx-auto p-4">
 					<h1 className="mb-4 text-2xl font-bold">{isFundManager ? "Client Dashboard" : "Your Portfolio"}</h1>
 					<div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -127,7 +209,7 @@ const Clients = () => {
 							</CardContent>
 						</Card>
 					</div>
-					<Tabs defaultValue="overview" className="mb-6">
+					<Tabs defaultValue={user?.userType === "Fund Manager" ? "clients" : "overview"} className="mb-6">
 						<TabsList>
 							<TabsTrigger value="overview">Overview</TabsTrigger>
 							{<TabsTrigger value="clients">Clients</TabsTrigger>}
@@ -173,23 +255,36 @@ const Clients = () => {
 										<TableRow>
 											<TableHead>Client</TableHead>
 											<TableHead>Assets</TableHead>
-											<TableHead>Performance</TableHead>
 											<TableHead>Last Updated</TableHead>
+											<TableHead>Scope</TableHead>
 											<TableHead>Actions</TableHead>
 										</TableRow>
 									</TableHeader>
 									<TableBody>
-										{clients.map((client) => (
+										{loading && (
+											<td>
+												<LoadingSpinner />
+											</td>
+										)}
+										{currentClients?.length === 0 && !loading ? <div>No current clients.</div> : null}
+										{currentClients?.map((client) => (
 											<TableRow key={client.id}>
-												<TableCell>{client.name}</TableCell>
-												<TableCell>${client.assets.toLocaleString()}</TableCell>
-												<TableCell className={client.performance >= 0 ? "text-green-600" : "text-red-600"}>
-													{client.performance >= 0 ? "+" : ""}
-													{client.performance}%
-												</TableCell>
-												<TableCell>{client.lastUpdated}</TableCell>
+												<TableCell className="font-bold">{client.company_name}</TableCell>
+												<TableCell>9999999999999999</TableCell>
+												<TableCell>{client.updated_at}</TableCell>
 												<TableCell>
-													<Button onClick={() => handleClientSelect(client)}>View Details</Button>
+													<Button onClick={() => handleClientSelect(client)}>View Client</Button>
+												</TableCell>
+												<TableCell>
+													<Button
+														onClick={() => {
+															setClientToDelete(client)
+															setAlertDialogOpen(true)
+														}}
+														className="bg-foreground text-destructive-foreground outline"
+													>
+														Delete
+													</Button>
 												</TableCell>
 											</TableRow>
 										))}
@@ -198,21 +293,6 @@ const Clients = () => {
 							</TabsContent>
 						)}
 					</Tabs>
-					<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-						<DialogContent>
-							<DialogHeader>
-								<DialogTitle>{selectedClient?.name} Details</DialogTitle>
-							</DialogHeader>
-							<div className="py-4">
-								<p>Total Assets: ${selectedClient?.assets.toLocaleString()}</p>
-								<p>Performance: {selectedClient?.performance}%</p>
-								<p>Last Updated: {selectedClient?.lastUpdated}</p>
-							</div>
-							<DialogFooter>
-								<Button onClick={() => setIsDialogOpen(false)}>Close</Button>
-							</DialogFooter>
-						</DialogContent>
-					</Dialog>
 				</div>
 			</div>
 		</>

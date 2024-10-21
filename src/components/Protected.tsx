@@ -18,33 +18,43 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 	const navigate = useNavigate()
 
 	useEffect(() => {
-		const verifyCookie = async () => {
-			try {
-				const response = await axios.get(`${baseAPIURL}/me`, { withCredentials: true })
-				console.log(response.data)
-				if (response.status === 200) {
-					if (!user?.email) {
-						setUser({
-							...user,
-							email: response.data.email,
-							firstName: response.data.first_name,
-							lastName: response.data.last_name,
-							userType: mapUserIDType(response.data.type_user_id) || null,
-						})
-					}
-					setAuthenticated(true)
-				} else {
-					navigate("/login")
-					setAuthenticated(false)
-				}
-			} catch (err: any) {
-				navigate("/login")
-				setAuthenticated(false)
-			} finally {
-				setLoading(false) // Finish loading
-			}
-		}
-
+    const verifyCookie = async (retryCount = 1) => {
+      try {
+          const response = await axios.get(`${baseAPIURL}/me`, { withCredentials: true });
+          console.log(response.data);
+          if (response.status === 200) {
+              if (!user?.email) {
+                  setUser({
+                      ...user,
+                      id: response.data.id,
+                      email: response.data.email,
+                      firstName: response.data.first_name,
+                      lastName: response.data.last_name,
+                      userType: mapUserIDType(response.data.type_user_id) || null,
+                  });
+              }
+              setAuthenticated(true);
+          } else {
+              throw new Error('Unauthorized');
+          }
+      } catch (err: any) {
+          if (retryCount < 3) {
+              // Retry up to 2 more times
+              await verifyCookie(retryCount + 1);
+          } else {
+              toast({
+                  title: "ERROR PROTECTED ROUTE",
+                  description: "Should be logged out.",
+                  variant: "destructive",
+              });
+              console.log(err);
+              navigate("/login");
+              setAuthenticated(false);
+          }
+      } finally {
+          setLoading(false); // Finish loading
+      }
+  };
 		verifyCookie()
 	}, [user, setUser, navigate])
 

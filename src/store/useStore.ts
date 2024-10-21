@@ -3,6 +3,7 @@ import { create } from "zustand"
 // Define the types for the store's state and actions
 
 export interface UserInfo {
+	id: number
 	firstName: string
 	lastName: string
 	email: string

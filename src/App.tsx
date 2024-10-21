@@ -11,6 +11,7 @@ import Notifications from "./components/Dashboard/Notifications/Notifications"
 import { Toaster } from "./components/ui/toaster"
 import ViewAssets from "./components/Assets/ViewAssets"
 import SignUp from "./components/Registration/SignUp"
+import Client from "./components/Dashboard/Clients/Client"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
@@ -28,6 +29,14 @@ const routes = [
 		element: (
 			<Protected fundManagerOnly>
 				<Clients />
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/clients/:clientId",
+		element: (
+			<Protected fundManagerOnly>
+				<Client />
 			</Protected>
 		),
 	},
