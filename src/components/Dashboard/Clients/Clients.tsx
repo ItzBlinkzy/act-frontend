@@ -36,7 +36,7 @@ import {
 import { baseAPIURL } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
-
+import { StoreModel } from "@/store/useStore"
 interface IClient {
 	id: string
 	company_name: string
@@ -70,9 +70,10 @@ const performanceData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 const Clients = () => {
 	// retrieve from API later
-	const user = useStore((state) => state.user)
+	const user = useStore((state: StoreModel) => state.user)
+  const managerClients = useStore((state: StoreModel) => state.managerClients)
+  const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
 	const navigate = useNavigate()
-
 	const [assets] = useState<Asset[]>(mockAssets)
 	const [loading, setLoading] = useState(false)
 	const [currentClients, setCurrentClients] = useState<IClient[]>([])
@@ -113,12 +114,16 @@ const Clients = () => {
 		if (!user?.id) return // Ensure user is available
 
 		setLoading(true)
+
 		const getCurrentClients = async () => {
 			try {
-				const response = await axios.get(`${baseAPIURL}/list-clients/${user!.id}`, { withCredentials: true })
+				const response = await axios.get(`${baseAPIURL}/list-clients/${user.id}`, {
+					withCredentials: true,
+				})
 
 				if (response.status === 200) {
-					setCurrentClients(response.data)
+					setManagerClients(response.data) // Save the response in the global store
+					setCurrentClients(response.data) // Save the response locally if needed
 				}
 			} catch (e: any) {
 				console.log(e)
@@ -136,7 +141,6 @@ const Clients = () => {
 	}, [user])
 
 	const isFundManager = user?.userType === "Fund Manager"
-
 	const totalAssets = assets.reduce((sum: number, asset: Asset) => sum + asset.value, 0)
 
 	return (
@@ -266,8 +270,8 @@ const Clients = () => {
 												<LoadingSpinner />
 											</td>
 										)}
-										{currentClients?.length === 0 && !loading ? <div>No current clients.</div> : null}
-										{currentClients?.map((client) => (
+										{managerClients?.length === 0 && !loading ? <div>No current clients.</div> : null}
+										{managerClients?.map((client: IClient) => (
 											<TableRow key={client.id}>
 												<TableCell className="font-bold">{client.company_name}</TableCell>
 												<TableCell>9999999999999999</TableCell>

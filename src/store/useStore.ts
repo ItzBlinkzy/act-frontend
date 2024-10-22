@@ -10,9 +10,19 @@ export interface UserInfo {
 	userType: "Fund Manager" | "Fund Administrator" | null
 }
 
+interface IClient {
+	id: string
+	company_name: string
+	created_at: string
+	updated_at: string
+	deleted_at: Date | null
+}
+
 export interface StoreModel {
 	user: UserInfo | null // user can be either UserInfo or null initially
 	setUser: (userInfo: UserInfo) => void
+	managerClients: IClient[]
+	setManagerClients: (clients: IClient[]) => void
 }
 
 const useStore = create<StoreModel>((set) => ({
@@ -20,6 +30,11 @@ const useStore = create<StoreModel>((set) => ({
 	setUser: (userInfo: UserInfo) =>
 		set((state) => ({
 			user: { ...state.user, ...userInfo }, // correct usage of the spread operator
+		})),
+	managerClients: [],
+	setManagerClients: (clients) =>
+		set(() => ({
+			managerClients: clients, // correct usage of the spread operator
 		})),
 }))
 
