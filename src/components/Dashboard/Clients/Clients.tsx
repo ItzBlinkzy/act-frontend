@@ -71,8 +71,8 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 const Clients = () => {
 	// retrieve from API later
 	const user = useStore((state: StoreModel) => state.user)
-  const managerClients = useStore((state: StoreModel) => state.managerClients)
-  const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
+	const managerClients = useStore((state: StoreModel) => state.managerClients)
+	const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
 	const navigate = useNavigate()
 	const [assets] = useState<Asset[]>(mockAssets)
 	const [loading, setLoading] = useState(false)
@@ -145,7 +145,7 @@ const Clients = () => {
 
 	return (
 		<>
-			<div className="flex">
+			<div className="flex bg-secondary">
 				<Sidebar />
 				<AlertDialog open={alertDialogOpen} onOpenChange={setAlertDialogOpen}>
 					<AlertDialogContent>
@@ -213,7 +213,10 @@ const Clients = () => {
 							</CardContent>
 						</Card>
 					</div>
-					<Tabs defaultValue={user?.userType === "Fund Manager" ? "clients" : "overview"} className="mb-6">
+					<Tabs
+						defaultValue={user?.userType === "Fund Manager" ? "clients" : "overview"}
+						className="mb-6 rounded-md  bg-background p-2"
+					>
 						<TabsList>
 							<TabsTrigger value="overview">Overview</TabsTrigger>
 							{<TabsTrigger value="clients">Clients</TabsTrigger>}

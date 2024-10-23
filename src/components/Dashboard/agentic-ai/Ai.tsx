@@ -138,7 +138,7 @@ export default function RecommendationsPage() {
 	return (
 		<div className="flex">
 			<Sidebar />
-			<div className="container mx-auto p-4">
+			<div className="container mx-auto bg-secondary p-4">
 				<h1 className="mb-4 text-2xl font-bold">Stock Recommendations</h1>
 				<Card className="mb-6">
 					<CardHeader>
