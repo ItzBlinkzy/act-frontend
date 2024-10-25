@@ -47,7 +47,7 @@ export default function UserItem() {
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger className="flex w-full">
+			<DropdownMenuTrigger className="flex w-full bg-background">
 				<div className="flex w-full max-w-full items-center gap-3 break-words rounded-[8px] border p-2 hover:bg-secondary">
 					<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
 						<p>{initials}</p>

@@ -152,8 +152,9 @@ const Clients = () => {
 						<AlertDialogHeader>
 							<AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
 							<AlertDialogDescription>
-								This action cannot be undone. This will permanently delete your client and remove their data from our
-								servers.
+								This will permanently delete{" "}
+								<span className="font-bold text-black">{clientToDelete?.company_name} </span>
+								and remove their data from our servers. This action cannot be undone.
 							</AlertDialogDescription>
 						</AlertDialogHeader>
 						<AlertDialogFooter>
