@@ -33,7 +33,7 @@ import {
 	Pie,
 	Cell,
 } from "recharts"
-import { baseAPIURL } from "@/config/constants"
+import { baseApiUrl } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { StoreModel } from "@/store/useStore"
@@ -88,7 +88,7 @@ const Clients = () => {
 		if (!client) return
 		setLoading(true)
 		try {
-			const response = await axios.delete(`${baseAPIURL}/delete-client/${client.id}`, { withCredentials: true })
+			const response = await axios.delete(`${baseApiUrl}/delete-client/${client.id}`, { withCredentials: true })
 			// successfully deleted client send toast
 			if (response.status === 200) {
 				toast({
@@ -117,7 +117,7 @@ const Clients = () => {
 
 		const getCurrentClients = async () => {
 			try {
-				const response = await axios.get(`${baseAPIURL}/list-clients/${user.id}`, {
+				const response = await axios.get(`${baseApiUrl}/list-clients/${user.id}`, {
 					withCredentials: true,
 				})
 

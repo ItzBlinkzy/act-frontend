@@ -18,7 +18,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Trash } from "lucide-react"
 import { useEffect } from "react"
-import { baseAPIURL } from "@/config/constants"
+import { baseApiUrl } from "@/config/constants"
 import axios from "axios"
 
 interface Stock {
@@ -57,7 +57,7 @@ const Client = () => {
 
 	useEffect(() => {
 		const getClientStockData = async () => {
-			const response = await axios.get(`${baseAPIURL}/`)
+			const response = await axios.get(`${baseApiUrl}/`)
 		}
 
 		// get list of all currentClients

@@ -16,7 +16,7 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import Sidebar from "../Sidebar"
-import { baseAPIURL } from "@/config/constants"
+import { baseApiUrl } from "@/config/constants"
 import axios from "axios"
 
 interface Recommendation {

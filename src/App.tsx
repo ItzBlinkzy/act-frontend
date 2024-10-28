@@ -12,6 +12,7 @@ import { Toaster } from "./components/ui/toaster"
 import ViewAssets from "./components/Assets/ViewAssets"
 import SignUp from "./components/Registration/SignUp"
 import Client from "./components/Dashboard/Clients/Client"
+import IndividualAsset from "./components/Assets/IndividualAsset"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
@@ -53,6 +54,14 @@ const routes = [
 		element: (
 			<Protected>
 				<ViewAssets />
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/assets/:ticker",
+		element: (
+			<Protected>
+				<IndividualAsset />
 			</Protected>
 		),
 	},

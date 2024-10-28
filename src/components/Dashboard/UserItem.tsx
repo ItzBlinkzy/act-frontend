@@ -8,7 +8,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { toast } from "@/hooks/use-toast"
-import { baseAPIURL } from "@/config/constants"
+import { baseApiUrl } from "@/config/constants"
 import axios from "axios"
 import useStore, { StoreModel } from "@/store/useStore"
 import { Badge } from "@/components/ui/badge"
@@ -27,7 +27,7 @@ export default function UserItem() {
 	}
 	const handleLogout = async () => {
 		try {
-			const response = await axios.post(`${baseAPIURL}/logout`, {}, { withCredentials: true })
+			const response = await axios.post(`${baseApiUrl}/logout`, {}, { withCredentials: true })
 			if (response.status === 200) {
 				navigate("/login")
 				toast({

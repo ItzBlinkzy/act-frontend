@@ -8,6 +8,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowUpDown, Search } from "lucide-react"
+import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom"
 import {
 	LineChart,
 	Line,
@@ -22,7 +23,8 @@ import {
 	Cell,
 } from "recharts"
 import Sidebar from "../Dashboard/Sidebar"
-
+import axios from "axios"
+import { baseApiUrl } from "@/config/constants"
 interface Stock {
 	ticker: string
 	logo_url: string
@@ -32,86 +34,31 @@ interface Stock {
 	marketCap: number | null
 }
 
-const initialStocks: Stock[] = [
+interface TickerChoose {
+	company_name: string
+	ticker: string
+}
+
+const initalStockChoose = [
 	{
-		logo_url: "",
-		marketCap: 3439319580672,
-		regularMarketPrice: null,
-		shortName: "Apple Inc.",
+		company_name: "Apple Inc.",
 		ticker: "AAPL",
-		trailingPE: 34.483234,
 	},
 	{
-		logo_url: "",
-		marketCap: 3127005675520,
-		regularMarketPrice: null,
-		shortName: "Microsoft Corporation",
-		ticker: "MSFT",
-		trailingPE: 35.591373,
+		company_name: "Apple Hospitality REIT, Inc.",
+		ticker: "APLE",
 	},
 	{
-		logo_url: "",
-		marketCap: 2063295184896,
-		regularMarketPrice: null,
-		shortName: "Alphabet Inc.",
-		ticker: "GOOGL",
-		trailingPE: 23.992817,
+		company_name: "Maui Land & Pineapple Company, ",
+		ticker: "MLP",
 	},
 	{
-		logo_url: "",
-		marketCap: 1943050387456,
-		regularMarketPrice: null,
-		shortName: "Amazon.com, Inc.",
-		ticker: "AMZN",
-		trailingPE: 44.28948,
+		company_name: "Pineapple Financial Inc.",
+		ticker: "PAPL",
 	},
 	{
-		logo_url: "",
-		marketCap: 824280940544,
-		regularMarketPrice: null,
-		shortName: "Tesla, Inc.",
-		ticker: "TSLA",
-		trailingPE: 72.47752,
-	},
-	{
-		logo_url: "",
-		marketCap: 2870009921536,
-		regularMarketPrice: null,
-		shortName: "NVIDIA Corporation",
-		ticker: "NVDA",
-		trailingPE: 54.672894,
-	},
-	{
-		logo_url: "",
-		marketCap: null,
-		regularMarketPrice: null,
-		shortName: "N/A",
-		ticker: "FB",
-		trailingPE: null,
-	},
-	{
-		logo_url: "",
-		marketCap: 589061881856,
-		regularMarketPrice: null,
-		shortName: "JP Morgan Chase & Co.",
-		ticker: "JPM",
-		trailingPE: 11.547127,
-	},
-	{
-		logo_url: "",
-		marketCap: 389948801024,
-		regularMarketPrice: null,
-		shortName: "Johnson & Johnson",
-		ticker: "JNJ",
-		trailingPE: 24.506807,
-	},
-	{
-		logo_url: "",
-		marketCap: 540176318464,
-		regularMarketPrice: null,
-		shortName: "Visa Inc.",
-		ticker: "V",
-		trailingPE: 29.753485,
+		company_name: "Pineapple Energy Inc.",
+		ticker: "PEGY",
 	},
 ]
 const marketOverviewData = [
@@ -135,10 +82,10 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export default function StocksAndCryptoPage() {
 	// eslint-disable-next-line
-	const [stocks, setStocks] = useState<Stock[]>(initialStocks)
-	const [filteredStocks, setFilteredStocks] = useState<Stock[]>(initialStocks)
+	const [stocks, setStocks] = useState<TickerChoose[]>(initalStockChoose)
+	const [filteredStocks, setFilteredStocks] = useState<TickerChoose[]>([])
 	const [searchTerm, setSearchTerm] = useState("")
-	const [sortColumn, setSortColumn] = useState<keyof Stock>("ticker")
+	const [sortColumn, setSortColumn] = useState("ticker")
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [selectedStock, setSelectedStock] = useState<Stock | null>(null)
@@ -146,15 +93,24 @@ export default function StocksAndCryptoPage() {
 	const [shareAmount, setShareAmount] = useState(0)
 
 	useEffect(() => {
-		const filtered = stocks.filter(
-			(stock) =>
-				stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()) ||
-				stock.shortName?.toLowerCase().includes(searchTerm.toLowerCase()),
-		)
+		const searchStock = async () => {
+			try {
+				const response = await axios.get(`${baseApiUrl}/search-stock-by-name`)
+				setStocks(response.data)
+			} catch (e: any) {
+				console.log(e)
+			} finally {
+				//loading stuff
+			}
+		}
+	}, [])
+
+	useEffect(() => {
+		const filtered = stocks.filter((stock) => stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()))
 		setFilteredStocks(filtered)
 	}, [stocks, searchTerm])
 
-	const handleSort = (column: keyof Stock) => {
+	const handleSort = (column: keyof TickerChoose) => {
 		if (column === sortColumn) {
 			setSortDirection(sortDirection === "asc" ? "desc" : "asc")
 		} else {
@@ -163,10 +119,10 @@ export default function StocksAndCryptoPage() {
 		}
 
 		const sorted = [...filteredStocks].sort((a, b) => {
-			if (a[column] === null) return 1
-			if (b[column] === null) return -1
-			if (a[column]! < b[column]!) return sortDirection === "asc" ? -1 : 1
-			if (a[column]! > b[column]!) return sortDirection === "asc" ? 1 : -1
+			if (a["company_name"] === null) return 1
+			if (b["company_name"] === null) return -1
+			if (a["company_name"] < b["company_name"]) return sortDirection === "asc" ? -1 : 1
+			if (a["company_name"] > b["company_name"]) return sortDirection === "asc" ? 1 : -1
 			return 0
 		})
 
@@ -270,17 +226,11 @@ export default function StocksAndCryptoPage() {
 					<TableHeader>
 						<TableRow>
 							<TableHead className="cursor-pointer" onClick={() => handleSort("ticker")}>
-								Symbol {sortColumn === "ticker" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
+								Ticker {sortColumn === "ticker" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
 							</TableHead>
-							<TableHead className="cursor-pointer" onClick={() => handleSort("shortName")}>
-								Name {sortColumn === "shortName" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
-							</TableHead>
-							<TableHead className="cursor-pointer" onClick={() => handleSort("marketCap")}>
-								Market Cap {sortColumn === "marketCap" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
-							</TableHead>
-							<TableHead className="cursor-pointer" onClick={() => handleSort("regularMarketPrice")}>
-								Price{" "}
-								{sortColumn === "regularMarketPrice" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
+							<TableHead className="cursor-pointer" onClick={() => handleSort("company_name")}>
+								Company Name{" "}
+								{sortColumn === "company_name" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
 							</TableHead>
 							<TableHead>Actions</TableHead>
 						</TableRow>
@@ -289,23 +239,17 @@ export default function StocksAndCryptoPage() {
 						{filteredStocks.map((stock) => (
 							<TableRow key={stock.ticker}>
 								<TableCell>{stock.ticker}</TableCell>
-								<TableCell>{stock.shortName}</TableCell>
-								<TableCell>{formatMarketCap(stock.marketCap)}</TableCell>
-								<TableCell>${stock.trailingPE?.toFixed(2)}</TableCell>
+								<TableCell>{stock.company_name}</TableCell>
 								<TableCell>
-									<div className="flex space-x-2">
-										<Button size="sm" onClick={() => handleAction(stock, "buy")}>
-											Buy
-										</Button>
-										<Button size="sm" variant="outline" onClick={() => handleAction(stock, "sell")}>
-											Sell
-										</Button>
-									</div>
+									<Button size="sm" onClick={() => handleExpand(stock)}>
+										View Stock Data
+									</Button>
 								</TableCell>
 							</TableRow>
 						))}
 					</TableBody>
 				</Table>
+
 				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 					<DialogContent>
 						<DialogHeader>
