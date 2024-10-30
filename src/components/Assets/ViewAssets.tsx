@@ -42,6 +42,28 @@ interface TickerChoose {
 	ticker: string
 }
 
+const initalStockChoose = [
+	{
+		company_name: "Apple Inc.",
+		ticker: "AAPL",
+	},
+	{
+		company_name: "Apple Hospitality REIT, Inc.",
+		ticker: "APLE",
+	},
+	{
+		company_name: "Maui Land & Pineapple Company, ",
+		ticker: "MLP",
+	},
+	{
+		company_name: "Pineapple Financial Inc.",
+		ticker: "PAPL",
+	},
+	{
+		company_name: "Pineapple Energy Inc.",
+		ticker: "PEGY",
+	},
+]
 const marketOverviewData = [
 	{ name: "Jan", value: 4000 },
 	{ name: "Feb", value: 3000 },
@@ -63,7 +85,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export default function StocksAndCryptoPage() {
 	const navigate = useNavigate()
-	const [stocks] = useState<TickerChoose[]>([])
+	const [stocks, setStocks] = useState<TickerChoose[]>(stocksData)
 	const [filteredStocks, setFilteredStocks] = useState<TickerChoose[]>([])
 	const [searchTerm, setSearchTerm] = useState("")
 	const [displayedStocks, setDisplayedStocks] = useState<TickerChoose[]>([])

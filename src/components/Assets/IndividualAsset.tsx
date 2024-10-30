@@ -16,18 +16,19 @@ const IndividualAsset = () => {
 	useEffect(() => {
 		const getStockHistory = async () => {
 			const response = await axios.post(`${baseAiUrl}/api/search-stock-by-ticker`, { stock_ticker: ticker })
-			console.log(response)
-			setHistoricalData(response.data.historical_data.slice(0, 200))
-			setCompanyData(response.data.stock_data)
-			setCompanyData({ ...companyData, company_name: response.data.company_name })
+			setHistoricalData(response.data.historical_data)
+			setCompanyData({ ...response.data.stock_data, company_name: response.data.company_name })
 		}
 		getStockHistory()
 	}, [ticker])
 
+	// Limit data to the last 100 points for performance
+	const limitedHistoricalData = useMemo(() => historicalData.slice(-200), [historicalData])
+
 	const candlestickSeries = useMemo(
 		() => [
 			{
-				data: historicalData.map((data) => ({
+				data: limitedHistoricalData.map((data) => ({
 					x: new Date(data.Date),
 					y: [
 						parseFloat(data.Open.toFixed(2)),
@@ -38,7 +39,7 @@ const IndividualAsset = () => {
 				})),
 			},
 		],
-		[historicalData], // Only recalculate if historicalData changes
+		[limitedHistoricalData],
 	)
 
 	const chartOptions = useMemo(
@@ -47,10 +48,7 @@ const IndividualAsset = () => {
 				type: "candlestick",
 				height: 350,
 				id: "candlestick-chart",
-				zoom: {
-					enabled: true,
-					autoScaleYaxis: true,
-				},
+				zoom: { enabled: true, autoScaleYaxis: true },
 				toolbar: {
 					autoSelected: "zoom",
 					tools: {
@@ -61,22 +59,11 @@ const IndividualAsset = () => {
 					},
 				},
 			},
-			title: {
-				text: `${ticker} Price Movements`,
-				align: "center",
-			},
-			xaxis: {
-				type: "datetime",
-			},
-			yaxis: {
-				tooltip: {
-					enabled: true,
-				},
-			},
+			xaxis: { type: "datetime" },
+			yaxis: { tooltip: { enabled: true } },
 		}),
-		[ticker], // Recalculate options only when the ticker changes
+		[ticker],
 	)
-
 	return (
 		<div className="flex h-full w-full">
 			<Sidebar />
