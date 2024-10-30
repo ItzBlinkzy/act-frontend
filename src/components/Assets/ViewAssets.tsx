@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import Fuse from "fuse.js"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -8,7 +9,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowUpDown, Search } from "lucide-react"
-import { BrowserRouter as Router, Route, Routes, useParams } from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes, useParams, useNavigate } from "react-router-dom"
+import stocksData from "@/assets/stocks.json"
+
 import {
 	LineChart,
 	Line,
@@ -81,52 +84,49 @@ const sectorAllocationData = [
 const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export default function StocksAndCryptoPage() {
-	// eslint-disable-next-line
-	const [stocks, setStocks] = useState<TickerChoose[]>(initalStockChoose)
+	const navigate = useNavigate()
+	const [stocks] = useState<TickerChoose[]>(stocksData)
 	const [filteredStocks, setFilteredStocks] = useState<TickerChoose[]>([])
 	const [searchTerm, setSearchTerm] = useState("")
+	const [displayedStocks, setDisplayedStocks] = useState<TickerChoose[]>([])
 	const [sortColumn, setSortColumn] = useState("ticker")
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [selectedStock, setSelectedStock] = useState<Stock | null>(null)
-	const [actionType, setActionType] = useState<"buy" | "sell">("buy")
 	const [shareAmount, setShareAmount] = useState(0)
 
 	useEffect(() => {
-		const searchStock = async () => {
-			try {
-				const response = await axios.get(`${baseApiUrl}/search-stock-by-name`)
-				setStocks(response.data)
-			} catch (e: any) {
-				console.log(e)
-			} finally {
-				//loading stuff
-			}
-		}
-	}, [])
+		// Initialize display with the first 10 stocks
+		setDisplayedStocks(stocks.slice(0, 10))
+		setFilteredStocks(stocks.slice(0, 10)) // initialize filteredStocks with first 10
+	}, [stocks])
 
-	useEffect(() => {
-		const filtered = stocks.filter((stock) => stock.ticker.toLowerCase().includes(searchTerm.toLowerCase()))
-		setFilteredStocks(filtered)
-	}, [stocks, searchTerm])
+	const handleSearch = () => {
+		const fuse = new Fuse(stocks, {
+			keys: ["ticker", "company_name"],
+			threshold: 0.3,
+		})
+		const result = fuse.search(searchTerm)
+		const filteredResults = result.slice(0, 10).map((res) => res.item)
+		setDisplayedStocks(filteredResults)
+		setFilteredStocks(filteredResults) // synchronize filteredStocks with displayedStocks
+	}
 
 	const handleSort = (column: keyof TickerChoose) => {
-		if (column === sortColumn) {
-			setSortDirection(sortDirection === "asc" ? "desc" : "asc")
-		} else {
-			setSortColumn(column)
-			setSortDirection("asc")
-		}
+		const direction = column === sortColumn && sortDirection === "asc" ? "desc" : "asc"
+		setSortColumn(column)
+		setSortDirection(direction)
 
 		const sorted = [...filteredStocks].sort((a, b) => {
-			if (a["company_name"] === null) return 1
-			if (b["company_name"] === null) return -1
-			if (a["company_name"] < b["company_name"]) return sortDirection === "asc" ? -1 : 1
-			if (a["company_name"] > b["company_name"]) return sortDirection === "asc" ? 1 : -1
-			return 0
+			const valA = a[column] || ""
+			const valB = b[column] || ""
+			return direction === "asc" ? valA.localeCompare(valB) : valB.localeCompare(valA)
 		})
-
 		setFilteredStocks(sorted)
+	}
+
+	const handleExpand = (ticker: string) => {
+		navigate(`/dashboard/assets/${ticker}`)
 	}
 
 	const formatMarketCap = (marketCap: number | null) => {
@@ -135,19 +135,6 @@ export default function StocksAndCryptoPage() {
 		if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`
 		if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`
 		return `$${marketCap.toFixed(2)}`
-	}
-
-	const handleAction = (stock: Stock, action: "buy" | "sell") => {
-		setSelectedStock(stock)
-		setActionType(action)
-		setIsDialogOpen(true)
-	}
-
-	const handleTransaction = () => {
-		// Implement the buy/sell logic here
-		console.log(`${actionType} ${shareAmount} shares of ${selectedStock?.ticker}`)
-		setIsDialogOpen(false)
-		setShareAmount(0)
 	}
 
 	return (
@@ -203,12 +190,20 @@ export default function StocksAndCryptoPage() {
 					<div className="flex items-center">
 						<Search className="mr-2 h-5 w-5 text-gray-500" />
 						<Input
-							type="text"
 							placeholder="Search stocks..."
 							value={searchTerm}
 							onChange={(e) => setSearchTerm(e.target.value)}
+							onKeyDown={(e) => {
+								if (e.key === "Enter") {
+									handleSearch()
+								}
+							}}
 							className="w-64"
 						/>
+
+						<Button onClick={handleSearch} className="ml-2">
+							Search
+						</Button>
 					</div>
 					<Select onValueChange={(value) => console.log(`Filter by: ${value}`)}>
 						<SelectTrigger className="w-[180px]">
@@ -225,23 +220,22 @@ export default function StocksAndCryptoPage() {
 				<Table>
 					<TableHeader>
 						<TableRow>
-							<TableHead className="cursor-pointer" onClick={() => handleSort("ticker")}>
-								Ticker {sortColumn === "ticker" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
+							<TableHead onClick={() => handleSort("ticker")}>
+								Ticker {sortColumn === "ticker" && <ArrowUpDown />}
 							</TableHead>
-							<TableHead className="cursor-pointer" onClick={() => handleSort("company_name")}>
-								Company Name{" "}
-								{sortColumn === "company_name" && <ArrowUpDown className="ml-2 inline h-5 w-5 text-black " />}
+							<TableHead onClick={() => handleSort("company_name")}>
+								Company Name {sortColumn === "company_name" && <ArrowUpDown />}
 							</TableHead>
 							<TableHead>Actions</TableHead>
 						</TableRow>
 					</TableHeader>
 					<TableBody>
-						{filteredStocks.map((stock) => (
+						{displayedStocks.map((stock) => (
 							<TableRow key={stock.ticker}>
 								<TableCell>{stock.ticker}</TableCell>
 								<TableCell>{stock.company_name}</TableCell>
 								<TableCell>
-									<Button size="sm" onClick={() => handleExpand(stock)}>
+									<Button size="sm" onClick={() => handleExpand(stock.ticker)}>
 										View Stock Data
 									</Button>
 								</TableCell>
@@ -252,11 +246,7 @@ export default function StocksAndCryptoPage() {
 
 				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
 					<DialogContent>
-						<DialogHeader>
-							<DialogTitle>
-								{actionType === "buy" ? "Buy" : "Sell"} {selectedStock?.ticker} Stock
-							</DialogTitle>
-						</DialogHeader>
+						<DialogHeader></DialogHeader>
 						<div className="py-4">
 							<p>Current Price: ${selectedStock?.trailingPE?.toFixed(2)}</p>
 							<p>Market Cap: {selectedStock ? formatMarketCap(selectedStock.marketCap) : ""}</p>
@@ -273,14 +263,7 @@ export default function StocksAndCryptoPage() {
 									min="0"
 								/>
 							</div>
-							<p className="mt-2">
-								Total {actionType === "buy" ? "Cost" : "Value"}: $
-								{(shareAmount * (selectedStock?.regularMarketPrice || 0)).toFixed(2)}
-							</p>
 						</div>
-						<DialogFooter>
-							<Button onClick={handleTransaction}>{actionType === "buy" ? "Buy" : "Sell"} Shares</Button>
-						</DialogFooter>
 					</DialogContent>
 				</Dialog>
 			</div>
