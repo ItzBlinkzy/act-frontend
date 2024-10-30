@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowUpDown, Search } from "lucide-react"
-import { BrowserRouter as Router, Route, Routes, useParams, useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom"
 import stocksData from "@/assets/stocks.json"
 
 import {
@@ -26,44 +26,12 @@ import {
 	Cell,
 } from "recharts"
 import Sidebar from "../Dashboard/Sidebar"
-import axios from "axios"
-import { baseApiUrl } from "@/config/constants"
-interface Stock {
-	ticker: string
-	logo_url: string
-	trailingPE: number | null
-	regularMarketPrice: number | null
-	shortName: string | null
-	marketCap: number | null
-}
 
 interface TickerChoose {
 	company_name: string
 	ticker: string
 }
 
-const initalStockChoose = [
-	{
-		company_name: "Apple Inc.",
-		ticker: "AAPL",
-	},
-	{
-		company_name: "Apple Hospitality REIT, Inc.",
-		ticker: "APLE",
-	},
-	{
-		company_name: "Maui Land & Pineapple Company, ",
-		ticker: "MLP",
-	},
-	{
-		company_name: "Pineapple Financial Inc.",
-		ticker: "PAPL",
-	},
-	{
-		company_name: "Pineapple Energy Inc.",
-		ticker: "PEGY",
-	},
-]
 const marketOverviewData = [
 	{ name: "Jan", value: 4000 },
 	{ name: "Feb", value: 3000 },
@@ -92,13 +60,10 @@ export default function StocksAndCryptoPage() {
 	const [sortColumn, setSortColumn] = useState("ticker")
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
-	const [selectedStock, setSelectedStock] = useState<Stock | null>(null)
-	const [shareAmount, setShareAmount] = useState(0)
 
 	useEffect(() => {
-		// Initialize display with the first 10 stocks
 		setDisplayedStocks(stocks.slice(0, 10))
-		setFilteredStocks(stocks.slice(0, 10)) // initialize filteredStocks with first 10
+		setFilteredStocks(stocks.slice(0, 10))
 	}, [stocks])
 
 	const handleSearch = () => {
@@ -109,7 +74,7 @@ export default function StocksAndCryptoPage() {
 		const result = fuse.search(searchTerm)
 		const filteredResults = result.slice(0, 10).map((res) => res.item)
 		setDisplayedStocks(filteredResults)
-		setFilteredStocks(filteredResults) // synchronize filteredStocks with displayedStocks
+		setFilteredStocks(filteredResults)
 	}
 
 	const handleSort = (column: keyof TickerChoose) => {
@@ -129,22 +94,14 @@ export default function StocksAndCryptoPage() {
 		navigate(`/dashboard/assets/${ticker}`)
 	}
 
-	const formatMarketCap = (marketCap: number | null) => {
-		if (marketCap === null) return "N/A"
-		if (marketCap >= 1e12) return `$${(marketCap / 1e12).toFixed(2)}T`
-		if (marketCap >= 1e9) return `$${(marketCap / 1e9).toFixed(2)}B`
-		if (marketCap >= 1e6) return `$${(marketCap / 1e6).toFixed(2)}M`
-		return `$${marketCap.toFixed(2)}`
-	}
-
 	return (
-		<div className="flex">
+		<div className="flex h-full w-full">
 			<Sidebar />
-			<div className="w-full p-2">
+			<div className="w-full p-4">
 				<div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-					<Card>
-						<CardHeader>
-							<CardTitle>Market Overview</CardTitle>
+					<Card className="border-green-200 shadow-lg">
+						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+							<CardTitle className="text-green-800">Market Overview</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<ResponsiveContainer width="100%" height={200}>
@@ -154,14 +111,14 @@ export default function StocksAndCryptoPage() {
 									<YAxis />
 									<Tooltip />
 									<Legend />
-									<Line type="monotone" dataKey="value" stroke="#8884d8" />
+									<Line type="monotone" dataKey="value" stroke="#0ea5e9" />
 								</LineChart>
 							</ResponsiveContainer>
 						</CardContent>
 					</Card>
-					<Card>
-						<CardHeader>
-							<CardTitle>Sector Allocation</CardTitle>
+					<Card className="border-green-200 shadow-lg">
+						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+							<CardTitle className="text-green-800">Sector Allocation</CardTitle>
 						</CardHeader>
 						<CardContent>
 							<ResponsiveContainer width="100%" height={200}>
@@ -186,84 +143,80 @@ export default function StocksAndCryptoPage() {
 						</CardContent>
 					</Card>
 				</div>
-				<div className="mb-4 flex items-center justify-between">
-					<div className="flex items-center">
-						<Search className="mr-2 h-5 w-5 text-gray-500" />
-						<Input
-							placeholder="Search stocks..."
-							value={searchTerm}
-							onChange={(e) => setSearchTerm(e.target.value)}
-							onKeyDown={(e) => {
-								if (e.key === "Enter") {
-									handleSearch()
-								}
-							}}
-							className="w-64"
-						/>
-
-						<Button onClick={handleSearch} className="ml-2">
-							Search
-						</Button>
-					</div>
-					<Select onValueChange={(value) => console.log(`Filter by: ${value}`)}>
-						<SelectTrigger className="w-[180px]">
-							<SelectValue placeholder="Filter by" />
-						</SelectTrigger>
-						<SelectContent>
-							<SelectItem value="all">All</SelectItem>
-							<SelectItem value="tech">Technology</SelectItem>
-							<SelectItem value="finance">Finance</SelectItem>
-							<SelectItem value="healthcare">Healthcare</SelectItem>
-						</SelectContent>
-					</Select>
-				</div>
-				<Table>
-					<TableHeader>
-						<TableRow>
-							<TableHead onClick={() => handleSort("ticker")}>
-								Ticker {sortColumn === "ticker" && <ArrowUpDown />}
-							</TableHead>
-							<TableHead onClick={() => handleSort("company_name")}>
-								Company Name {sortColumn === "company_name" && <ArrowUpDown />}
-							</TableHead>
-							<TableHead>Actions</TableHead>
-						</TableRow>
-					</TableHeader>
-					<TableBody>
-						{displayedStocks.map((stock) => (
-							<TableRow key={stock.ticker}>
-								<TableCell>{stock.ticker}</TableCell>
-								<TableCell>{stock.company_name}</TableCell>
-								<TableCell>
-									<Button size="sm" onClick={() => handleExpand(stock.ticker)}>
-										View Stock Data
-									</Button>
-								</TableCell>
-							</TableRow>
-						))}
-					</TableBody>
-				</Table>
+				<Card className="mb-6 border-green-200 shadow-lg">
+					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+						<CardTitle className="text-green-800">Stock Search</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="mb-4 flex items-center justify-between">
+							<div className="flex items-center">
+								<Search className="mr-2 h-5 w-5 text-green-600" />
+								<Input
+									placeholder="Search stocks..."
+									value={searchTerm}
+									onChange={(e) => setSearchTerm(e.target.value)}
+									onKeyDown={(e) => {
+										if (e.key === "Enter") {
+											handleSearch()
+										}
+									}}
+									className="w-64 border-green-300 focus:border-green-500 focus:ring-green-500"
+								/>
+								<Button onClick={handleSearch} className="ml-2 bg-green-500 text-white hover:bg-green-600">
+									Search
+								</Button>
+							</div>
+							<Select onValueChange={(value) => console.log(`Filter by: ${value}`)}>
+								<SelectTrigger className="w-[180px] border-green-300">
+									<SelectValue placeholder="Filter by" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="all">All</SelectItem>
+									<SelectItem value="tech">Technology</SelectItem>
+									<SelectItem value="finance">Finance</SelectItem>
+									<SelectItem value="healthcare">Healthcare</SelectItem>
+								</SelectContent>
+							</Select>
+						</div>
+						<Table>
+							<TableHeader>
+								<TableRow className="bg-green-50">
+									<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("ticker")}>
+										Ticker {sortColumn === "ticker" && <ArrowUpDown className="inline" />}
+									</TableHead>
+									<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("company_name")}>
+										Company Name {sortColumn === "company_name" && <ArrowUpDown className="inline" />}
+									</TableHead>
+									<TableHead className="text-green-800">Actions</TableHead>
+								</TableRow>
+							</TableHeader>
+							<TableBody>
+								{displayedStocks.map((stock) => (
+									<TableRow key={stock.ticker} className="hover:bg-sky-50">
+										<TableCell className="font-medium text-green-700">{stock.ticker}</TableCell>
+										<TableCell>{stock.company_name}</TableCell>
+										<TableCell>
+											<Button
+												size="sm"
+												onClick={() => handleExpand(stock.ticker)}
+												className="bg-sky-500 text-white hover:bg-sky-600"
+											>
+												View Stock Data
+											</Button>
+										</TableCell>
+									</TableRow>
+								))}
+							</TableBody>
+						</Table>
+					</CardContent>
+				</Card>
 
 				<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-					<DialogContent>
-						<DialogHeader></DialogHeader>
-						<div className="py-4">
-							<p>Current Price: ${selectedStock?.trailingPE?.toFixed(2)}</p>
-							<p>Market Cap: {selectedStock ? formatMarketCap(selectedStock.marketCap) : ""}</p>
-							<div className="mt-4">
-								<label htmlFor="amount" className="block text-sm font-medium text-gray-700">
-									Number of Shares
-								</label>
-								<Input
-									type="number"
-									id="amount"
-									value={shareAmount}
-									onChange={(e) => setShareAmount(Number(e.target.value))}
-									className="mt-1"
-									min="0"
-								/>
-							</div>
-						</div>
+					<DialogContent className="bg-white">
+						<DialogHeader>
+							<DialogTitle className="text-green-800">Stock Details</DialogTitle>
+						</DialogHeader>
+						{/* Dialog content here */}
 					</DialogContent>
 				</Dialog>
 			</div>

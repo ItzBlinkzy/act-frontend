@@ -63,12 +63,12 @@ export default function Sidebar() {
 	]
 
 	return (
-		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r p-4">
+		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r border-slate-400 bg-gradient-to-br from-green-200 to-sky-100">
 			<div>
 				<UserItem />
 			</div>
 			<div className="grow">
-				<Command style={{ overflow: "visible" }}>
+				<Command style={{ overflow: "visible", background: "transparent" }}>
 					<CommandList style={{ overflow: "visible" }}>
 						{menuList.map((menu: any, key: number) => (
 							<CommandGroup key={key} heading={menu.group}>
@@ -82,7 +82,7 @@ export default function Sidebar() {
 									if (option.requiresFundManager && user?.userType !== "Fund Manager") {
 										return
 									}
-                  
+
 									return (
 										<CommandItem
 											key={optionKey}
