@@ -41,7 +41,7 @@ export default function Sidebar() {
 			],
 		},
 		{
-			group: "Assets",
+			group: "Purchase Assets",
 			items: [
 				{
 					route: "/dashboard/assets",
@@ -63,7 +63,7 @@ export default function Sidebar() {
 	]
 
 	return (
-		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r border-slate-400 bg-gradient-to-br from-green-200 to-sky-100">
+		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r border-slate-400 bg-gradient-to-tr from-green-200 to-sky-100">
 			<div>
 				<UserItem />
 			</div>
@@ -86,7 +86,7 @@ export default function Sidebar() {
 									return (
 										<CommandItem
 											key={optionKey}
-											className={`flex cursor-pointer gap-2 ${isActive ? "bg-gray-300" : ""} hover:text-green-300`}
+											className={`flex cursor-pointer gap-2 ${isActive ? "bg-blue-400 opacity-90" : ""}`}
 											onSelect={() => navigate(option.route)}
 										>
 											{option.icon}

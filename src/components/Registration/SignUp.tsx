@@ -1,4 +1,3 @@
-// import { Icons } from "@/components/icons"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
@@ -12,19 +11,29 @@ import axios from "axios"
 import { baseApiUrl } from "@/config/constants"
 import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
+
 export default function SignUp() {
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
+	const fundAdminClientTexts = {
+		administrator: "A Fund Administrator manages their own assets",
+		manager: "A Fund Manager manages assets for multiple clients",
+	}
+	const [formData, setFormData] = useState({
+		first_name: "",
+		last_name: "",
+		email: "",
+		password: "",
+		type_user_id: 0,
+	})
+
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
 			event.preventDefault()
 			handleSignUp()
 		}
 	}
-	const fundAdminClientTexts = {
-		administrator: "A Fund Administrator manages their own assets",
-		manager: "A Fund Manager manages assets for multiple clients",
-	}
+
 	const getInfoText = (): string => {
 		if (formData.type_user_id === 1) {
 			return fundAdminClientTexts.administrator
@@ -33,14 +42,6 @@ export default function SignUp() {
 		}
 		return ""
 	}
-
-	const [formData, setFormData] = useState({
-		first_name: "",
-		last_name: "",
-		email: "",
-		password: "",
-		type_user_id: 0, // type_user_id for account type
-	})
 
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { id, value } = e.target
@@ -80,7 +81,7 @@ export default function SignUp() {
 		) {
 			toast({
 				title: "Invalid password",
-				description: "password must be 6-20 characters long, include at least one letter and one number",
+				description: "Password must be 6-20 characters long, include at least one letter and one number",
 				variant: "destructive",
 			})
 			valid = false
@@ -101,9 +102,6 @@ export default function SignUp() {
 	const handleSignUp = async () => {
 		setLoading(true)
 		if (validateForm()) {
-			// Proceed with form submission
-			console.log("Form data:", formData)
-
 			try {
 				const response = await axios.post(`${baseApiUrl}/register-user`, formData, {
 					withCredentials: true,
@@ -117,11 +115,8 @@ export default function SignUp() {
 					})
 
 					navigate(`/login?email=${formData.email}`)
-					setLoading(false)
 					return
 				}
-
-				setLoading(false)
 			} catch (e: any) {
 				toast({
 					title: "Internal Server Error",
@@ -136,32 +131,45 @@ export default function SignUp() {
 	}
 
 	return (
-		<div className="flex min-h-[100dvh] flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
-			<Card className="w-[60%]">
-				<CardHeader className="space-y-1">
-					<CardTitle className="text-2xl">Create a new account</CardTitle>
-					<CardDescription>Enter your information to create an account.</CardDescription>
+		<div className="flex min-h-[100dvh] flex-col items-center justify-center bg-gradient-to-br from-green-100 to-sky-100 px-4 py-12 sm:px-6 lg:px-8">
+			<Card className="w-full max-w-2xl border-green-200 shadow-lg">
+				<CardHeader className="space-y-1 bg-gradient-to-r from-green-200 to-sky-200">
+					<CardTitle className="text-2xl font-bold text-green-800">Create a new account</CardTitle>
+					<CardDescription className="text-sky-700">Enter your information to create an account.</CardDescription>
 				</CardHeader>
-				<CardContent className="grid gap-4">
-					<div className="flex w-full flex-col justify-between gap-4">
-						<div className="grid gap-2">
-							<Label htmlFor="first_name">First Name</Label>
+				<CardContent className="grid gap-4 pt-6">
+					<div className="flex w-full flex-col justify-start gap-4 sm:flex-row">
+						<div className="grid w-full gap-2 sm:w-1/2">
+							<Label htmlFor="first_name" className="text-green-700">
+								First Name
+							</Label>
 							<Input
 								id="first_name"
 								type="text"
 								placeholder="John"
 								value={formData.first_name}
 								onChange={handleChange}
+								className="border-green-300 focus:border-green-500 focus:ring-green-500"
 							/>
 						</div>
-						<div className="grid gap-2">
-							<Label htmlFor="last_name">Last Name</Label>
-							<Input id="last_name" type="text" placeholder="Doe" value={formData.last_name} onChange={handleChange} />
+						<div className="grid w-full gap-2 sm:w-1/2">
+							<Label htmlFor="last_name" className="text-green-700">
+								Last Name
+							</Label>
+							<Input
+								id="last_name"
+								type="text"
+								placeholder="Doe"
+								value={formData.last_name}
+								onChange={handleChange}
+								className="border-green-300 focus:border-green-500 focus:ring-green-500"
+							/>
 						</div>
 					</div>
 					<div className="grid gap-2">
 						<Label htmlFor="email">Email</Label>
 						<Input
+							className="border-green-300 focus:border-green-500 focus:ring-green-500"
 							id="email"
 							type="email"
 							placeholder="john@email.com"
@@ -172,7 +180,7 @@ export default function SignUp() {
 					<div className="grid gap-2">
 						<Label htmlFor="type_user_id">Account Type</Label>
 						<Select onValueChange={handleSelectChange}>
-							<SelectTrigger>
+							<SelectTrigger className="border-green-300 focus:border-green-500 focus:ring-green-500">
 								{formData.type_user_id === 1
 									? "Fund Administrator"
 									: formData.type_user_id === 2
@@ -181,8 +189,8 @@ export default function SignUp() {
 							</SelectTrigger>
 							{formData.type_user_id !== 0 && (
 								<SelectGroup className="flex">
-									<InfoIcon className="text-muted-foreground" />
-									<SelectLabel className="px-4 py-0 text-sm italic text-muted-foreground">{getInfoText()}</SelectLabel>
+									<InfoIcon className="text-sky-600" />
+									<SelectLabel className="px-4 py-0 text-sm italic text-sky-700">{getInfoText()}</SelectLabel>
 								</SelectGroup>
 							)}
 							<SelectContent>
@@ -192,13 +200,21 @@ export default function SignUp() {
 						</Select>
 					</div>
 					<div className="grid gap-2" onKeyDown={handleKeyDown}>
-						<Label htmlFor="password">Password</Label>
-						<Input id="password" type="password" value={formData.password} onChange={handleChange} />
+						<Label htmlFor="password" className="text-green-700">
+							Password
+						</Label>
+						<Input
+							id="password"
+							type="password"
+							value={formData.password}
+							onChange={handleChange}
+							className="border-green-300 focus:border-green-500 focus:ring-green-500"
+						/>
 					</div>
 				</CardContent>
 				<CardFooter>
-					<Button className="w-full" onClick={handleSignUp}>
-						{!loading && "Sign In"}
+					<Button className="w-full bg-green-500 text-white hover:bg-green-600" onClick={handleSignUp}>
+						{!loading && "Sign Up"}
 						{loading && <LoadingSpinner />}
 					</Button>
 				</CardFooter>

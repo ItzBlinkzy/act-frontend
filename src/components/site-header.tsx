@@ -1,5 +1,4 @@
 import { MainNav } from "@/components/main-nav"
-import { ModeToggle } from "@/components/mode-toggle"
 import { siteConfig } from "@/config/site"
 
 export function SiteHeader() {
@@ -35,7 +34,6 @@ export function SiteHeader() {
 								<span className="sr-only">YouTube</span>
 							</div>
 						</Link> */}
-						<ModeToggle />
 					</nav>
 				</div>
 			</div>

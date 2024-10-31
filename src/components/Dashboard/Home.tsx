@@ -1,8 +1,8 @@
 import Sidebar from "@/components/Dashboard/Sidebar"
 import useStore from "@/store/useStore"
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { Button } from "../ui/button"
+import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "lucide-react"
@@ -22,6 +22,8 @@ interface Stock {
 const DashboardHome = () => {
 	const [recentPosts, setRecentPosts] = useState<BlogPost[]>([])
 	const [topStocks, setTopStocks] = useState<Stock[]>([])
+	const user = useStore((state) => state.user)
+
 	useEffect(() => {
 		setRecentPosts([
 			{ id: 1, title: "Understanding Market Trends", excerpt: "An in-depth look at current market trends..." },
@@ -50,57 +52,66 @@ const DashboardHome = () => {
 			{ symbol: "JNJ", name: "Johnson & Johnson", value: 170.69 },
 		])
 	}, [])
-	const user = useStore((state) => state.user)
+
 	return (
-		<div className="flex h-full w-full">
+		<div className="flex h-full w-full bg-gradient-to-br from-green-100 to-sky-100">
 			<Sidebar />
-			<div className="flex w-full flex-col bg-secondary">
-				<Card className="m-4 p-0">
-					<div className="ml-4 mt-4">
-						<HomeIcon />
+			<div className="flex w-full flex-col">
+				<Card className="m-4 border-green-200 p-0 shadow-lg">
+					<div className="mt-4 border-b border-b-slate-400 p-2">
+						<HomeIcon className="h-8 w-8 text-green-600" />
 					</div>
-					<CardHeader>
-						<CardTitle className="p-0 text-3xl font-normal">
-							Welcome back, <span>{user?.firstName}</span>
+					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+						<CardTitle className="text-3xl font-normal text-green-800">
+							Welcome back, <span className="font-bold text-sky-700">{user?.firstName}</span>
 						</CardTitle>
 					</CardHeader>
 				</Card>
 				<div className="grid w-full grid-cols-1 gap-6 p-4 md:grid-cols-2">
-					<Card>
-						<CardHeader>
-							<CardTitle>Quick Links</CardTitle>
+					<Card className="border-green-200 shadow-lg">
+						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+							<CardTitle className="text-green-800">Quick Links</CardTitle>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="p-4">
 							<div className="flex flex-col space-y-2">
 								<Link to="/dashboard/clients">
-									<Button variant="outline" className="w-full justify-start">
+									<Button
+										variant="outline"
+										className="w-full justify-start border-green-300 hover:bg-green-50 hover:text-green-700"
+									>
 										Clients
 									</Button>
 								</Link>
 								<Link to="/dashboard/ai">
-									<Button variant="outline" className="w-full justify-start">
+									<Button
+										variant="outline"
+										className="w-full justify-start border-sky-300 hover:bg-sky-50 hover:text-sky-700"
+									>
 										Agentic AI
 									</Button>
 								</Link>
 								<Link to="/dashboard/assets">
-									<Button variant="outline" className="w-full justify-start">
+									<Button
+										variant="outline"
+										className="w-full justify-start border-green-300 hover:bg-green-50 hover:text-green-700"
+									>
 										Stocks & Crypto
 									</Button>
 								</Link>
 							</div>
 						</CardContent>
 					</Card>
-					<Card>
-						<CardHeader>
-							<CardTitle>Recent Blog Posts</CardTitle>
+					<Card className="border-green-200 shadow-lg">
+						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+							<CardTitle className="text-green-800">Recent Blog Posts</CardTitle>
 						</CardHeader>
-						<CardContent>
+						<CardContent className="p-4">
 							<ScrollArea className="h-[200px]">
 								{recentPosts.map((post) => (
-									<div key={post.id} className="mb-4">
-										<h3 className="text-lg font-semibold">{post.title}</h3>
-										<p className="text-sm text-gray-600">{post.excerpt}</p>
-										<Link to={`/blog/${post.id}`} className="text-blue-500 hover:underline">
+									<div key={post.id} className="mb-4 rounded-lg bg-white p-4 shadow-sm">
+										<h3 className="text-lg font-semibold text-green-700">{post.title}</h3>
+										<p className="text-sm text-sky-600">{post.excerpt}</p>
+										<Link to={`/blog/${post.id}`} className="text-green-500 hover:text-green-600 hover:underline">
 											Read more
 										</Link>
 									</div>
@@ -108,16 +119,16 @@ const DashboardHome = () => {
 							</ScrollArea>
 						</CardContent>
 					</Card>
-					<Card className="md:col-span-2">
-						<CardHeader>
-							<CardTitle>Popular Stocks</CardTitle>
+					<Card className="border-green-200 shadow-lg md:col-span-2">
+						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+							<CardTitle className="text-green-800">Popular Stocks</CardTitle>
 						</CardHeader>
-						<CardContent>
-							<div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+						<CardContent className="p-4">
+							<div className="grid grid-cols-1 gap-4 rounded-sm border border-green-200 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
 								{topStocks.map((stock) => (
-									<div key={stock.symbol} className="rounded-lg bg-gray-100 p-3">
-										<h3 className="font-bold">{stock.symbol}</h3>
-										<p className="text-sm">{stock.name}</p>
+									<div key={stock.symbol} className="rounded-lg border bg-gradient-to-r p-4">
+										<h3 className="font-bold text-green-700">{stock.symbol}</h3>
+										<p className="text-2xl text-sky-600">{stock.name}</p>
 										<p className="font-semibold text-green-600">${stock.value.toFixed(2)}</p>
 									</div>
 								))}

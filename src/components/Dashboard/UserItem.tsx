@@ -48,24 +48,26 @@ export default function UserItem() {
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger className="flex w-full">
-				<div className="flex w-full max-w-full items-center gap-3 break-words border-b border-slate-400 p-2 hover:bg-secondary">
-					<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
-						<p>{initials}</p>
+				<div className="flex w-full max-w-full items-center justify-between gap-3 break-words border-b border-slate-400 p-2 hover:bg-secondary">
+					<div className="flex items-center gap-3">
+						<div className="flex min-h-10 min-w-10 items-center justify-center rounded-full bg-emerald-500 font-[700] text-white">
+							<p>{initials}</p>
+						</div>
+						<div className="flex flex-col rounded-md p-2 text-left">
+							<Badge className={`${getBadgeColour()} font-bold text-white`}>{user?.userType}</Badge>
+							{user?.email}
+						</div>
 					</div>
-					<div className="flex flex-col rounded-md p-2 text-center outline-slate-500 hover:bg-secondary">
-						<Badge className={`${getBadgeColour()} font-bold text-white`}>{user?.userType}</Badge>
-						{user?.email}
-					</div>
-					<DropdownMenuContent>
-						<DropdownMenuLabel>My Account</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem className="cursor-pointer ">Open Settings</DropdownMenuItem>
-						<DropdownMenuItem className="cursor-pointer font-bold text-destructive" onClick={handleLogout}>
-							Sign Out
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-					<MenuIcon />
+					<MenuIcon className="ml-auto" />
 				</div>
+				<DropdownMenuContent>
+					<DropdownMenuLabel>My Account</DropdownMenuLabel>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem className="cursor-pointer">Open Settings</DropdownMenuItem>
+					<DropdownMenuItem className="cursor-pointer font-bold text-destructive" onClick={handleLogout}>
+						Sign Out
+					</DropdownMenuItem>
+				</DropdownMenuContent>
 			</DropdownMenuTrigger>
 		</DropdownMenu>
 	)

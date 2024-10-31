@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ArrowUpDown, Search } from "lucide-react"
 import { useNavigate } from "react-router-dom"
 import stocksData from "@/assets/stocks.json"
-
+import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import {
 	LineChart,
 	Line,
@@ -60,6 +60,8 @@ export default function StocksAndCryptoPage() {
 	const [sortColumn, setSortColumn] = useState("ticker")
 	const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc")
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+	const [hideInitially, setHideInitially] = useState(true)
+	const [loading, setLoading] = useState(false) // Loading state for fake delay
 
 	useEffect(() => {
 		setDisplayedStocks(stocks.slice(0, 10))
@@ -67,16 +69,24 @@ export default function StocksAndCryptoPage() {
 	}, [stocks])
 
 	const handleSearch = () => {
-		const fuse = new Fuse(stocks, {
-			keys: ["ticker", "company_name"],
-			threshold: 0.3,
-		})
-		const result = fuse.search(searchTerm)
-		const filteredResults = result.slice(0, 10).map((res) => res.item)
-		setDisplayedStocks(filteredResults)
-		setFilteredStocks(filteredResults)
-	}
+		setLoading(true)
+		setHideInitially(false)
 
+		const randomDelay = Math.floor(Math.random() * (500 - 100 + 1)) + 100
+
+		setTimeout(() => {
+			const fuse = new Fuse(stocks, {
+				keys: ["ticker", "company_name"],
+				threshold: 0.3,
+			})
+			const result = fuse.search(searchTerm)
+			const filteredResults = result.slice(0, 10).map((res) => res.item)
+
+			setDisplayedStocks(filteredResults)
+			setFilteredStocks(filteredResults)
+			setLoading(false)
+		}, randomDelay)
+	}
 	const handleSort = (column: keyof TickerChoose) => {
 		const direction = column === sortColumn && sortDirection === "asc" ? "desc" : "asc"
 		setSortColumn(column)
@@ -148,26 +158,28 @@ export default function StocksAndCryptoPage() {
 						<CardTitle className="text-green-800">Stock Search</CardTitle>
 					</CardHeader>
 					<CardContent>
-						<div className="mb-4 flex items-center justify-between">
-							<div className="flex items-center">
-								<Search className="mr-2 h-5 w-5 text-green-600" />
-								<Input
-									placeholder="Search stocks..."
-									value={searchTerm}
-									onChange={(e) => setSearchTerm(e.target.value)}
-									onKeyDown={(e) => {
-										if (e.key === "Enter") {
-											handleSearch()
-										}
-									}}
-									className="w-64 border-green-300 focus:border-green-500 focus:ring-green-500"
-								/>
+						<div className="flex items-center justify-between py-3">
+							<div className="flex items-center p-2">
+								<div className="relative w-64">
+									<Input
+										placeholder="Search stocks..."
+										value={searchTerm}
+										onChange={(e) => setSearchTerm(e.target.value)}
+										onKeyDown={(e) => {
+											if (e.key === "Enter") {
+												handleSearch()
+											}
+										}}
+										className="w-full border-green-300 pr-10 focus:border-green-500 focus:ring-green-500"
+									/>
+									<Search className="pointer-events-none absolute right-3 top-1/2 h-5 w-5 -translate-y-1/2 text-green-600" />
+								</div>
 								<Button onClick={handleSearch} className="ml-2 bg-green-500 text-white hover:bg-green-600">
 									Search
 								</Button>
 							</div>
 							<Select onValueChange={(value) => console.log(`Filter by: ${value}`)}>
-								<SelectTrigger className="w-[180px] border-green-300">
+								<SelectTrigger className="mr-2 w-[180px] border-green-300">
 									<SelectValue placeholder="Filter by" />
 								</SelectTrigger>
 								<SelectContent>
@@ -178,36 +190,43 @@ export default function StocksAndCryptoPage() {
 								</SelectContent>
 							</Select>
 						</div>
-						<Table>
-							<TableHeader>
-								<TableRow className="bg-green-50">
-									<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("ticker")}>
-										Ticker {sortColumn === "ticker" && <ArrowUpDown className="inline" />}
-									</TableHead>
-									<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("company_name")}>
-										Company Name {sortColumn === "company_name" && <ArrowUpDown className="inline" />}
-									</TableHead>
-									<TableHead className="text-green-800">Actions</TableHead>
-								</TableRow>
-							</TableHeader>
-							<TableBody>
-								{displayedStocks.map((stock) => (
-									<TableRow key={stock.ticker} className="hover:bg-sky-50">
-										<TableCell className="font-medium text-green-700">{stock.ticker}</TableCell>
-										<TableCell>{stock.company_name}</TableCell>
-										<TableCell>
-											<Button
-												size="sm"
-												onClick={() => handleExpand(stock.ticker)}
-												className="bg-sky-500 text-white hover:bg-sky-600"
-											>
-												View Stock Data
-											</Button>
-										</TableCell>
+						{loading ? (
+							<div className="flex justify-center py-10">
+								<LoadingSpinner />
+							</div>
+						) : (
+							<Table>
+								<TableHeader>
+									<TableRow className="bg-green-50">
+										<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("ticker")}>
+											Ticker {sortColumn === "ticker" && <ArrowUpDown className="inline" />}
+										</TableHead>
+										<TableHead className="cursor-pointer text-green-800" onClick={() => handleSort("company_name")}>
+											Company Name {sortColumn === "company_name" && <ArrowUpDown className="inline" />}
+										</TableHead>
+										<TableHead className="text-green-800">Actions</TableHead>
 									</TableRow>
-								))}
-							</TableBody>
-						</Table>
+								</TableHeader>
+								<TableBody>
+									{!hideInitially &&
+										displayedStocks.map((stock) => (
+											<TableRow key={stock.ticker} className="hover:bg-sky-50">
+												<TableCell className="font-medium text-green-700">{stock.ticker}</TableCell>
+												<TableCell>{stock.company_name}</TableCell>
+												<TableCell>
+													<Button
+														size="sm"
+														onClick={() => handleExpand(stock.ticker)}
+														className="bg-sky-500 text-white hover:bg-sky-600"
+													>
+														View Stock Data
+													</Button>
+												</TableCell>
+											</TableRow>
+										))}
+								</TableBody>
+							</Table>
+						)}
 					</CardContent>
 				</Card>
 
@@ -216,7 +235,6 @@ export default function StocksAndCryptoPage() {
 						<DialogHeader>
 							<DialogTitle className="text-green-800">Stock Details</DialogTitle>
 						</DialogHeader>
-						{/* Dialog content here */}
 					</DialogContent>
 				</Dialog>
 			</div>

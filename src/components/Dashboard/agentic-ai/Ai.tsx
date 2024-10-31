@@ -95,10 +95,6 @@ export default function RecommendationsPage() {
 			// Simulating API call with sample data
 			await new Promise((resolve) => setTimeout(resolve, 1000))
 
-			// get all stocks currently invested in and instantly get recommendations on all of them.
-
-			// be able to get recommendations on all stock whether you own it or not with search.
-
 			const filteredRecommendations = sampleRecommendations.filter(
 				(rec) =>
 					rec.symbol.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -136,14 +132,16 @@ export default function RecommendationsPage() {
 	}
 
 	return (
-		<div className="flex">
+		<div className="flex min-h-screen bg-gradient-to-br from-green-100 to-sky-100">
 			<Sidebar />
-			<div className="container mx-auto bg-secondary p-4">
-				<h1 className="mb-4 text-2xl font-bold">Stock Recommendations</h1>
-				<Card className="mb-6">
-					<CardHeader>
-						<CardTitle>Search Recommendations</CardTitle>
-						<CardDescription>Enter a stock symbol or name to search for recommendations</CardDescription>
+			<div className="container mx-auto p-4">
+				<h1 className="mb-4 text-2xl font-bold text-green-800">Stock Recommendations</h1>
+				<Card className="mb-6 border-green-200 shadow-lg">
+					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
+						<CardTitle className="text-green-800">Search Recommendations</CardTitle>
+						<CardDescription className="text-sky-700">
+							Enter a stock symbol or name to search for recommendations
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<form onSubmit={handleSearch} className="flex space-x-2">
@@ -152,9 +150,9 @@ export default function RecommendationsPage() {
 								placeholder="Search stocks..."
 								value={searchTerm}
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className="grow"
+								className="grow border-green-300 focus:border-green-500 focus:ring-green-500"
 							/>
-							<Button type="submit" disabled={isLoading}>
+							<Button type="submit" disabled={isLoading} className="bg-green-500 text-white hover:bg-green-600">
 								{isLoading ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -171,74 +169,82 @@ export default function RecommendationsPage() {
 					</CardContent>
 				</Card>
 				{error && (
-					<Card className="mb-6 bg-red-50">
+					<Card className="mb-6 border-red-200 bg-red-50">
 						<CardContent className="py-4 text-red-800">{error}</CardContent>
 					</Card>
 				)}
-				<Card>
-					<CardHeader>
-						<CardTitle>Recommendations</CardTitle>
-						<CardDescription>
+				<Card className="border-green-200 shadow-lg">
+					<CardHeader className="bg-gradient-to-b from-green-50 to-sky-50">
+						<CardTitle className="text-green-800">Recommendations</CardTitle>
+						<CardDescription className="text-sky-700">
 							Recommendations of your current portfolio based on current market analysis and AI Predictions
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						{isLoading ? (
 							<div className="flex h-32 items-center justify-center">
-								<Loader2 className="h-8 w-8 animate-spin" />
+								<Loader2 className="h-8 w-8 animate-spin text-green-500" />
 							</div>
 						) : recommendations.length > 0 ? (
 							<Table>
 								<TableHeader>
-									<TableRow>
-										<TableHead>Symbol</TableHead>
-										<TableHead>Name</TableHead>
-										<TableHead>Action</TableHead>
-										<TableHead>Confidence</TableHead>
-										<TableHead>Price</TableHead>
-										<TableHead>Description</TableHead>
+									<TableRow className="bg-sky-200">
+										<TableHead className="text-green-800">Symbol</TableHead>
+										<TableHead className="text-green-800">Name</TableHead>
+										<TableHead className="text-green-800">Action</TableHead>
+										<TableHead className="text-green-800">Confidence</TableHead>
+										<TableHead className="text-green-800">Price</TableHead>
+										<TableHead className="text-green-800">Description</TableHead>
 									</TableRow>
 								</TableHeader>
 								<TableBody>
 									{recommendations.map((rec) => (
-										<TableRow key={rec.id}>
-											<TableCell className="font-medium">{rec.symbol}</TableCell>
-											<TableCell>{rec.name}</TableCell>
+										<TableRow key={rec.id} className="hover:bg-sky-50">
+											<TableCell className="font-medium text-green-700">{rec.symbol}</TableCell>
+											<TableCell className="text-sky-700">{rec.name}</TableCell>
 											<TableCell>
 												<Badge className={getActionColor(rec.action)}>{rec.action.toUpperCase()}</Badge>
 											</TableCell>
-											<TableCell>{rec.confidence}%</TableCell>
-											<TableCell>${rec.price.toFixed(2)}</TableCell>
+											<TableCell className="text-sky-700">{rec.confidence}%</TableCell>
+											<TableCell className="text-sky-700">${rec.price.toFixed(2)}</TableCell>
 											<TableCell>
 												<Dialog>
 													<DialogTrigger asChild>
-														<Button variant="outline" size="sm">
+														<Button
+															variant="outline"
+															size="sm"
+															className="border-green-300 text-green-700 hover:bg-green-50"
+														>
 															<Info className="mr-2 h-4 w-4" />
 															View
 														</Button>
 													</DialogTrigger>
-													<DialogContent className="sm:max-w-[425px]">
+													<DialogContent className="bg-white sm:max-w-[425px]">
 														<DialogHeader>
-															<DialogTitle>
+															<DialogTitle className="text-green-800">
 																{rec.symbol} - {rec.name}
 															</DialogTitle>
-															<DialogDescription>AI-generated recommendation Description</DialogDescription>
+															<DialogDescription className="text-sky-700">
+																AI-generated recommendation Description
+															</DialogDescription>
 														</DialogHeader>
 														<div className="mt-4">
 															<p>
-																<strong>Action:</strong>{" "}
+																<strong className="text-green-700">Action:</strong>{" "}
 																<Badge className={getActionColor(rec.action)}>{rec.action.toUpperCase()}</Badge>
 															</p>
 															<p>
-																<strong>Confidence:</strong> {rec.confidence}%
+																<strong className="text-green-700">Confidence:</strong>{" "}
+																<span className="text-sky-700">{rec.confidence}%</span>
 															</p>
 															<p>
-																<strong>Current Price:</strong> ${rec.price.toFixed(2)}
+																<strong className="text-green-700">Current Price:</strong>{" "}
+																<span className="text-sky-700">${rec.price.toFixed(2)}</span>
 															</p>
 															<p className="mt-2">
-																<strong>Analysis:</strong>
+																<strong className="text-green-700">Analysis:</strong>
 															</p>
-															<p className="mt-1 text-sm">{rec.description}</p>
+															<p className="mt-1 text-sm text-sky-700">{rec.description}</p>
 														</div>
 													</DialogContent>
 												</Dialog>
@@ -248,7 +254,7 @@ export default function RecommendationsPage() {
 								</TableBody>
 							</Table>
 						) : (
-							<p className="py-4 text-center">No recommendations found. Try a different search term.</p>
+							<p className="py-4 text-center text-sky-700">No recommendations found. Try a different search term.</p>
 						)}
 					</CardContent>
 				</Card>
