@@ -137,7 +137,7 @@ export default function SignUp() {
 					<CardTitle className="text-2xl font-bold text-green-800">Create a new account</CardTitle>
 					<CardDescription className="text-sky-700">Enter your information to create an account.</CardDescription>
 				</CardHeader>
-				<CardContent className="grid gap-4 pt-6">
+				<CardContent className="grid gap-4 p-4 pt-6">
 					<div className="flex w-full flex-col justify-start gap-4 sm:flex-row">
 						<div className="grid w-full gap-2 sm:w-1/2">
 							<Label htmlFor="first_name" className="text-green-700">
@@ -212,8 +212,8 @@ export default function SignUp() {
 						/>
 					</div>
 				</CardContent>
-				<CardFooter>
-					<Button className="w-full bg-green-500 text-white hover:bg-green-600" onClick={handleSignUp}>
+				<CardFooter className="p-4">
+					<Button className="w-full bg-green-500 p-4 text-white hover:bg-green-600" onClick={handleSignUp}>
 						{!loading && "Sign Up"}
 						{loading && <LoadingSpinner />}
 					</Button>

@@ -65,7 +65,7 @@ const Login = () => {
 					<CardTitle className="text-2xl font-bold text-green-800">Sign in to your account</CardTitle>
 					<CardDescription className="font-bold text-sky-700">Login with Google or GitHub</CardDescription>
 				</CardHeader>
-				<CardContent className="grid gap-4 pt-6">
+				<CardContent className="grid gap-4 pt-6 p-4">
 					<div className="grid grid-cols-2 gap-6">
 						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
 							<FaGithub className="mr-2 h-6 w-6" />
