@@ -18,7 +18,7 @@ export default function UserItem() {
 	const navigate = useNavigate()
 	const user = useStore((state: StoreModel) => state.user)
 	let initials = "??"
-	if (user?.firstName.length || user?.lastName.length) {
+	if (user?.firstName?.length || user?.lastName?.length) {
 		initials = (user.firstName[0] + user.lastName[0]).toLocaleUpperCase()
 	}
 	const getBadgeColour = (): string => {

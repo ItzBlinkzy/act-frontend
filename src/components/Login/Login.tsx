@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { useState } from "react"
+import useStore, { StoreModel } from "@/store/useStore"
 import { baseApiUrl } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
@@ -16,6 +17,7 @@ const Login = () => {
 	const [email, setEmail] = useState("")
 	const [password, setPassword] = useState("")
 	const [loading, setLoading] = useState(false)
+	const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
@@ -38,6 +40,7 @@ const Login = () => {
 			const response = await axios.post(`${baseApiUrl}/login`, { email, password }, { withCredentials: true })
 			if (response.status === 200) {
 				navigate("/dashboard")
+				setManagerClients(response.data.clients)
 			}
 		} catch (err: any) {
 			if (err.response?.status === 401) {
@@ -65,7 +68,7 @@ const Login = () => {
 					<CardTitle className="text-2xl font-bold text-green-800">Sign in to your account</CardTitle>
 					<CardDescription className="font-bold text-sky-700">Login with Google or GitHub</CardDescription>
 				</CardHeader>
-				<CardContent className="grid gap-4 pt-6 p-4">
+				<CardContent className="grid gap-4 p-4 pt-6">
 					<div className="grid grid-cols-2 gap-6">
 						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
 							<FaGithub className="mr-2 h-6 w-6" />
@@ -113,18 +116,16 @@ const Login = () => {
 							className="border-green-300 focus:border-green-500 focus:ring-green-500"
 						/>
 					</div>
-				</CardContent>
-				<CardFooter>
 					<Button
 						type="submit"
-						className="w-full bg-green-500 text-white hover:bg-green-600"
+						className="w-full bg-green-500 p-4 text-white hover:bg-green-600"
 						onClick={handleLogin}
 						disabled={loading}
 					>
 						{!loading && "Sign In"}
 						{loading && <LoadingSpinner />}
 					</Button>
-				</CardFooter>
+				</CardContent>
 			</Card>
 			<div className="pt-4 text-center text-sm text-sky-700">
 				Don&apos;t have an account?{" "}

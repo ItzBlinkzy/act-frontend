@@ -74,12 +74,11 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 const Clients = () => {
 	const user = useStore((state: StoreModel) => state.user)
-	const managerClients = useStore((state: StoreModel) => state.managerClients)
+	const currentClients = useStore((state: StoreModel) => state.managerClients)
 	const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
 	const navigate = useNavigate()
 	const [assets] = useState<Asset[]>(mockAssets)
 	const [loading, setLoading] = useState(false)
-	const [currentClients, setCurrentClients] = useState<IClient[]>([])
 	const [alertDialogOpen, setAlertDialogOpen] = useState(false)
 	const [clientToDelete, setClientToDelete] = useState<null | IClient>(null)
 	const [deleteClientInputValue, setDeleteClientInputValue] = useState("")
@@ -116,32 +115,6 @@ const Clients = () => {
 
 	useEffect(() => {
 		if (!user?.id) return
-
-		setLoading(true)
-
-		const getCurrentClients = async () => {
-			try {
-				const response = await axios.get(`${baseApiUrl}/list-clients/${user.id}`, {
-					withCredentials: true,
-				})
-
-				if (response.status === 200) {
-					setManagerClients(response.data)
-					setCurrentClients(response.data)
-				}
-			} catch (e: any) {
-				console.log(e)
-				toast({
-					title: "Internal Server Error",
-					description: "Could not fetch current clients. Try again later.",
-					variant: "destructive",
-				})
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		getCurrentClients()
 	}, [user])
 
 	const isFundManager = user?.userType === "Fund Manager"
@@ -267,7 +240,7 @@ const Clients = () => {
 								<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 									<CardTitle className="text-green-800">Portfolio Summary</CardTitle>
 								</CardHeader>
-								<CardContent>
+								<CardContent className="p-6">
 									<p className="text-2xl font-bold text-green-600">${totalAssets.toLocaleString()}</p>
 									<p className="text-sm text-sky-600">Total Assets Under Management</p>
 								</CardContent>
@@ -277,7 +250,7 @@ const Clients = () => {
 							<TabsContent value="clients">
 								<Card className="border-green-200">
 									<CardHeader className="bg-gradient-to-t from-green-50 to-sky-50">
-										<CardTitle className="text-green-800">{managerClients?.length} Available Clients</CardTitle>
+										<CardTitle className="text-green-800">{currentClients?.length} Available Clients</CardTitle>
 									</CardHeader>
 									<CardContent>
 										<Table>
@@ -297,14 +270,14 @@ const Clients = () => {
 														</TableCell>
 													</TableRow>
 												)}
-												{managerClients?.length === 0 && !loading && (
+												{currentClients?.length === 0 && !loading && (
 													<TableRow>
 														<TableCell colSpan={4} className="text-center text-sky-600">
 															No current clients.
 														</TableCell>
 													</TableRow>
 												)}
-												{managerClients?.map((client: IClient) => (
+												{currentClients?.map((client: IClient) => (
 													<TableRow key={client.id} className="hover:bg-green-50">
 														<TableCell className="font-bold text-green-700">{client.company_name}</TableCell>
 														<TableCell className="text-sky-600">$9,999,999,999</TableCell>
@@ -321,7 +294,7 @@ const Clients = () => {
 																	setClientToDelete(client)
 																	setAlertDialogOpen(true)
 																}}
-																className="bg-red-500 text-white hover:bg-red-600"
+																className="bg-black text-white hover:bg-red-500"
 															>
 																Delete
 															</Button>

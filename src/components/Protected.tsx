@@ -12,6 +12,7 @@ interface ProtectedProps {
 }
 const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false }) => {
 	const [authenticated, setAuthenticated] = useState(false)
+	const setManagerClients = useStore((state) => state.setManagerClients)
 	const [loading, setLoading] = useState(true) // Loading state
 	const user = useStore((state: StoreModel) => state.user)
 	const setUser = useStore((state: StoreModel) => state.setUser)
@@ -26,13 +27,14 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 					if (!user?.email) {
 						setUser({
 							...user,
-							id: response.data.id,
-							email: response.data.email,
-							firstName: response.data.first_name,
-							lastName: response.data.last_name,
-							userType: mapUserIDType(response.data.type_user_id) || null,
+							id: response.data.user.id,
+							email: response.data.user.email,
+							firstName: response.data.user.first_name,
+							lastName: response.data.user.last_name,
+							userType: mapUserIDType(response.data.user.type_user_id) || null,
 						})
 					}
+					setManagerClients(response.data.clients)
 					setAuthenticated(true)
 				} else {
 					throw new Error("Unauthorized")
@@ -56,7 +58,8 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 			}
 		}
 		verifyCookie()
-	}, [user, setUser, navigate])
+		//eslint-disable-next-line
+	}, [navigate])
 
 	// Loading or unauthorized
 	if (loading) {

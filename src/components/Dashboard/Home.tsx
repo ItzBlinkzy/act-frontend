@@ -23,8 +23,9 @@ const DashboardHome = () => {
 	const [recentPosts, setRecentPosts] = useState<BlogPost[]>([])
 	const [topStocks, setTopStocks] = useState<Stock[]>([])
 	const user = useStore((state) => state.user)
-
+	const managerClients = useStore((state) => state.managerClients)
 	useEffect(() => {
+		console.log(user, managerClients)
 		setRecentPosts([
 			{ id: 1, title: "Understanding Market Trends", excerpt: "An in-depth look at current market trends..." },
 			{
@@ -61,11 +62,12 @@ const DashboardHome = () => {
 					<div className="mt-4 border-b border-b-slate-400 p-2">
 						<HomeIcon className="h-8 w-8 text-green-600" />
 					</div>
-					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
-						<CardTitle className="text-3xl font-normal text-green-800">
-							Welcome back, <span className="font-bold text-sky-700">{user?.firstName}</span>
-						</CardTitle>
-					</CardHeader>
+					<CardTitle className="p-4 text-3xl font-normal text-green-800">
+						Welcome back,{" "}
+						<span className="animate-gradient bg-gradient-to-r from-blue-800 to-sky-400 bg-clip-text text-4xl font-bold text-transparent">
+							{user?.firstName}
+						</span>
+					</CardTitle>
 				</Card>
 				<div className="grid w-full grid-cols-1 gap-6 p-4 md:grid-cols-2">
 					<Card className="border-green-200 shadow-lg">
@@ -108,7 +110,7 @@ const DashboardHome = () => {
 						<CardContent className="p-4">
 							<ScrollArea className="h-[200px]">
 								{recentPosts.map((post) => (
-									<div key={post.id} className="mb-4 rounded-lg bg-white p-4 shadow-sm">
+									<div key={post.id} className="mb-4 rounded-lg border bg-white p-4 shadow-sm ">
 										<h3 className="text-lg font-semibold text-green-700">{post.title}</h3>
 										<p className="text-sm text-sky-600">{post.excerpt}</p>
 										<Link to={`/blog/${post.id}`} className="text-green-500 hover:text-green-600 hover:underline">
@@ -124,11 +126,11 @@ const DashboardHome = () => {
 							<CardTitle className="text-green-800">Popular Stocks</CardTitle>
 						</CardHeader>
 						<CardContent className="p-4">
-							<div className="grid grid-cols-1 gap-4 rounded-sm border border-green-200 p-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5">
+							<div className="flex flex-wrap gap-4 rounded-sm border border-green-200 p-4">
 								{topStocks.map((stock) => (
-									<div key={stock.symbol} className="rounded-lg border bg-gradient-to-r p-4">
+									<div key={stock.symbol} className="grow-0 basis-64 rounded-lg border bg-gradient-to-r p-4">
 										<h3 className="font-bold text-green-700">{stock.symbol}</h3>
-										<p className="text-2xl text-sky-600">{stock.name}</p>
+										<p className="text-sky-600">{stock.name}</p>
 										<p className="font-semibold text-green-600">${stock.value.toFixed(2)}</p>
 									</div>
 								))}

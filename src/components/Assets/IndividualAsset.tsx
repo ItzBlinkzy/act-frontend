@@ -21,51 +21,40 @@ import { Check, ChevronsUpDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-
-interface Client {
-	id: string
-	name: string
-	ownedAssets: { [ticker: string]: number }
-}
+import useStore, { StoreModel } from "@/store/useStore"
 
 const IndividualAsset = () => {
 	const params = useParams()
-	const ticker = params?.ticker
+	let ticker = params?.ticker
+
+	if (!ticker?.length) ticker = "AAPL"
 
 	const [historicalData, setHistoricalData] = useState([])
 	const [companyData, setCompanyData] = useState({})
-	const [clients, setClients] = useState<Client[]>([])
-	const [selectedClient, setSelectedClient] = useState<string | null>(null)
+	const [selectedClient, setSelectedClient] = useState<any>(null)
 	const [quantity, setQuantity] = useState(1)
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
 	const [transactionType, setTransactionType] = useState<"buy" | "sell">("buy")
+	const clients = useStore((state: StoreModel) => state.managerClients)
+	console.log(clients)
 	const [open, setOpen] = useState(false)
 
 	useEffect(() => {
 		const getStockHistory = async () => {
-			const response = await axios.post(`${baseAiUrl}/api/search-stock-by-ticker`, { stock_ticker: ticker })
-			setHistoricalData(response.data.historical_data)
-			setCompanyData({ ...response.data.stock_data, company_name: response.data.company_name })
+			try {
+				const response = await axios.post(`${baseAiUrl}/api/search-stock-by-ticker`, { stock_ticker: ticker })
+				setHistoricalData(response.data.historical_data)
+				setCompanyData({ ...response.data.stock_data, company_name: response.data.company_name })
+			} catch (e: any) {
+				console.error(e)
+				toast({
+					title: "Internal Server Error",
+					description: "An error occurred while while retrieving the stock information.",
+					variant: "destructive",
+				})
+			}
 		}
 		getStockHistory()
-
-		// Fetch clients data (replace with actual API call)
-		const fetchClients = async () => {
-			// Simulated API call
-			const response = await new Promise<Client[]>((resolve) =>
-				setTimeout(
-					() =>
-						resolve([
-							{ id: "1", name: "John Doe", ownedAssets: { [ticker]: 10 } },
-							{ id: "2", name: "Jane Smith", ownedAssets: { [ticker]: 5 } },
-							{ id: "3", name: "Bob Johnson", ownedAssets: {} },
-						]),
-					1000,
-				),
-			)
-			setClients(response)
-		}
-		fetchClients()
 	}, [ticker])
 
 	const limitedHistoricalData = useMemo(() => historicalData.slice(-200), [historicalData])
@@ -182,7 +171,9 @@ const IndividualAsset = () => {
 										aria-expanded={open}
 										className="w-[200px] justify-between border-green-300 bg-white text-green-700 hover:bg-green-50"
 									>
-										{selectedClient ? clients.find((client) => client.id === selectedClient)?.name : "Select client..."}
+										{selectedClient
+											? clients.find((client) => client.id === selectedClient.id)?.name
+											: "Select client..."}
 										<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
 									</Button>
 								</PopoverTrigger>
