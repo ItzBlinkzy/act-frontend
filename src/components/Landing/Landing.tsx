@@ -1,6 +1,7 @@
 import Hero from "@/components/Landing/Hero"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import aiPowered from "@/assets/ai_powered.jpg"
 
 const Landing = () => {
 	return (
@@ -19,11 +20,9 @@ const Landing = () => {
 					</div>
 					<div className="mx-auto grid max-w-5xl items-center gap-6 py-12 lg:grid-cols-2 lg:gap-12">
 						<img
-							src="https://picsum.photos/550/"
-							width="550"
-							height="310"
+							src={aiPowered}
 							alt="AI Trading Visualization"
-							className="mx-auto aspect-video overflow-hidden rounded-xl object-cover object-center shadow-lg"
+							className="mx-auto overflow-hidden rounded-sm object-cover object-center shadow-lg"
 						/>
 						<div className="flex flex-col justify-center space-y-4">
 							<ul className="grid gap-6">

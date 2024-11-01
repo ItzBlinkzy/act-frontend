@@ -17,9 +17,9 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "@/hooks/use-toast"
-import { Check, ChevronsUpDown } from "lucide-react"
+import { Check, ChevronsUpDown, ChevronDown, TrendingUp, TrendingDown, DollarSign, BarChart2 } from "lucide-react"
 import { cn } from "@/lib/utils"
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from "@/components/ui/command"
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import useStore, { StoreModel } from "@/store/useStore"
 
@@ -30,14 +30,13 @@ const IndividualAsset = () => {
 	if (!ticker?.length) ticker = "AAPL"
 
 	const [historicalData, setHistoricalData] = useState([])
-	const [companyData, setCompanyData] = useState({})
+	const [companyData, setCompanyData] = useState<any>({})
 	const [selectedClient, setSelectedClient] = useState<any>(null)
 	const [quantity, setQuantity] = useState(1)
 	const [isDialogOpen, setIsDialogOpen] = useState(false)
+	const [isPopoverOpen, setIsPopoverOpen] = useState(false)
 	const [transactionType, setTransactionType] = useState<"buy" | "sell">("buy")
 	const clients = useStore((state: StoreModel) => state.managerClients)
-	console.log(clients)
-	const [open, setOpen] = useState(false)
 
 	useEffect(() => {
 		const getStockHistory = async () => {
@@ -49,7 +48,7 @@ const IndividualAsset = () => {
 				console.error(e)
 				toast({
 					title: "Internal Server Error",
-					description: "An error occurred while while retrieving the stock information.",
+					description: "An error occurred while retrieving the stock information.",
 					variant: "destructive",
 				})
 			}
@@ -84,12 +83,8 @@ const IndividualAsset = () => {
 				id: "candlestick-chart",
 				zoom: { enabled: true, autoScaleYaxis: true },
 				toolbar: {
-					autoSelected: "zoom",
 					tools: {
-						zoomin: true,
-						zoomout: true,
-						pan: true,
-						reset: true,
+						zoom: true, // Enable zoom button
 					},
 				},
 			},
@@ -113,26 +108,9 @@ const IndividualAsset = () => {
 			// Simulated API call for transaction
 			await new Promise((resolve) => setTimeout(resolve, 1000))
 
-			// Update client's owned assets (in a real app, this would be done on the server)
-			setClients((prevClients) =>
-				prevClients.map((client) =>
-					client.id === selectedClient
-						? {
-								...client,
-								ownedAssets: {
-									...client.ownedAssets,
-									[ticker]: (client.ownedAssets[ticker] || 0) + (transactionType === "buy" ? quantity : -quantity),
-								},
-							}
-						: client,
-				),
-			)
-
 			toast({
 				title: "Transaction Successful",
-				description: `Successfully ${
-					transactionType === "buy" ? "bought" : "sold"
-				} ${quantity} shares of ${ticker} for ${clients.find((c) => c.id === selectedClient)?.name}.`,
+				description: `Successfully ${transactionType === "buy" ? "bought" : "sold"} ${quantity} shares of ${ticker}`,
 			})
 			setIsDialogOpen(false)
 		} catch (error) {
@@ -150,113 +128,73 @@ const IndividualAsset = () => {
 			<Sidebar />
 			<div className="w-full p-4">
 				<Card className="m-4 border-green-200 p-0 shadow-lg">
-					<CardHeader className="50 bg-gradient-to-r from-green-50 to-sky-400">
+					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-400">
 						<CardTitle className="p-0 text-3xl font-normal text-green-800">
-							{companyData.company_name} (${ticker})
+							{companyData.longName || companyData.company_name} (${ticker})
 						</CardTitle>
 					</CardHeader>
 					<CardContent className="p-6">
-						{/* Candlestick Chart */}
 						<div className="mb-8">
 							<ApexCharts options={chartOptions} series={candlestickSeries} type="candlestick" height={350} />
 						</div>
-
-						{/* Client Selection and Transaction Buttons */}
 						<div className="mb-4 flex items-center space-x-4">
-							<Popover open={open} onOpenChange={setOpen}>
+							<Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
 								<PopoverTrigger asChild>
-									<Button
-										variant="outline"
-										role="combobox"
-										aria-expanded={open}
-										className="w-[200px] justify-between border-green-300 bg-white text-green-700 hover:bg-green-50"
-									>
-										{selectedClient
-											? clients.find((client) => client.id === selectedClient.id)?.name
-											: "Select client..."}
-										<ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+									<Button className="flex w-[200px] items-center justify-between border border-green-300 bg-white text-green-700">
+										<span>
+											{selectedClient
+												? clients.find((client) => client.id === selectedClient)?.company_name
+												: "Select a client..."}
+										</span>
+										<ChevronDown className="h-5 w-5 text-green-700" />
 									</Button>
 								</PopoverTrigger>
-								<PopoverContent className="w-[200px] p-0">
+								<PopoverContent className="w-[200px] border border-green-300 bg-white p-2">
 									<Command>
-										<CommandInput placeholder="Search client..." />
-										<CommandEmpty>No client found.</CommandEmpty>
-										<CommandGroup>
-											{clients.map((client) => (
+										<CommandInput placeholder="Search clients..." />
+										<CommandList>
+											{(clients && clients.length > 0
+												? clients
+												: [
+														{ id: 1, company_name: "Placeholder Client 1" },
+														{ id: 2, company_name: "Placeholder Client 2" },
+														{ id: 3, company_name: "Placeholder Client 3" },
+													]
+											).map((client) => (
 												<CommandItem
 													key={client.id}
 													onSelect={() => {
-														setSelectedClient(client.id === selectedClient ? null : client.id)
-														setOpen(false)
+														setSelectedClient(client.id)
+														setIsPopoverOpen(false)
 													}}
 												>
-													<Check
-														className={cn("mr-2 h-4 w-4", selectedClient === client.id ? "opacity-100" : "opacity-0")}
-													/>
-													{client.name}
+													{client.company_name}
 												</CommandItem>
 											))}
-										</CommandGroup>
+										</CommandList>
 									</Command>
 								</PopoverContent>
 							</Popover>
-							<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-								<DialogTrigger asChild>
-									<Button
-										onClick={() => {
-											setTransactionType("buy")
-											setIsDialogOpen(true)
-										}}
-										className="bg-green-500 text-white hover:bg-green-600"
-									>
-										Buy Stock
-									</Button>
-								</DialogTrigger>
-								<DialogTrigger asChild>
-									<Button
-										variant="outline"
-										onClick={() => {
-											setTransactionType("sell")
-											setIsDialogOpen(true)
-										}}
-										className="border-sky-300 text-sky-700 hover:bg-sky-50"
-									>
-										Sell Stock
-									</Button>
-								</DialogTrigger>
-								<DialogContent className="bg-white">
-									<DialogHeader>
-										<DialogTitle className="text-green-800">
-											{transactionType === "buy" ? "Buy" : "Sell"} Stock
-										</DialogTitle>
-										<DialogDescription>
-											Enter the quantity of shares you want to {transactionType === "buy" ? "buy" : "sell"}.
-										</DialogDescription>
-									</DialogHeader>
-									<Input
-										type="number"
-										value={quantity}
-										onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
-										min="1"
-										className="border-green-300 focus:ring-green-500"
-									/>
-									<DialogFooter>
-										<Button
-											onClick={handleTransaction}
-											className={
-												transactionType === "buy"
-													? "bg-green-500 text-white hover:bg-green-600"
-													: "bg-sky-500 text-white hover:bg-sky-600"
-											}
-										>
-											{transactionType === "buy" ? "Buy" : "Sell"}
-										</Button>
-									</DialogFooter>
-								</DialogContent>
-							</Dialog>
+							<Button
+								onClick={() => {
+									setTransactionType("buy")
+									setIsDialogOpen(true)
+								}}
+								className="to-blue-2000 bg-gradient-to-br from-blue-50 text-white hover:bg-green-600"
+							>
+								Buy Stock
+							</Button>
+							<Button
+								variant="outline"
+								onClick={() => {
+									setTransactionType("sell")
+									setIsDialogOpen(true)
+								}}
+								className="border-sky-300 text-sky-700 hover:bg-sky-50"
+							>
+								Sell Stock
+							</Button>
 						</div>
-
-						{/* Client Owned Asset Information */}
 						{selectedClient && (
 							<Card className="mt-6 border-green-200 shadow-md">
 								<CardHeader className="bg-gradient-to-r from-green-100 to-sky-100">
@@ -264,25 +202,139 @@ const IndividualAsset = () => {
 								</CardHeader>
 								<CardContent className="p-4">
 									<p className="text-green-700">
-										<strong>Client:</strong> {clients.find((c) => c.id === selectedClient)?.name}
+										<strong>Client: </strong>
+										{clients.find((client) => client.id === selectedClient)?.company_name}
 									</p>
 									<p className="text-sky-700">
-										<strong>Owned Shares of {ticker}:</strong>{" "}
-										{clients.find((c) => c.id === selectedClient)?.ownedAssets[ticker] || 0}
+										<strong>Owned Shares of {ticker}:</strong> Placeholder
 									</p>
 									<p className="text-green-700">
-										<strong>Estimated Value:</strong> $
-										{(
-											(clients.find((c) => c.id === selectedClient)?.ownedAssets[ticker] || 0) *
-											(companyData.current_price || 0)
-										).toFixed(2)}
+										<strong>Estimated Value:</strong> $Placeholder
 									</p>
 								</CardContent>
 							</Card>
 						)}
 					</CardContent>
 				</Card>
+				<div className="mb-8 grid grid-cols-1 gap-6 p-4 md:grid-cols-2">
+					{/* Stock Overview Card */}
+					<Card className="transform overflow-hidden rounded-lg border border-green-200 shadow-xl transition-transform">
+						<CardHeader className="bg-gradient-to-br from-green-50 to-sky-50 p-6 text-center">
+							<CardTitle className="text-lg font-bold tracking-wide text-green-900">📈 Stock Overview</CardTitle>
+						</CardHeader>
+						<CardContent className="rounded-b-lg bg-white p-6">
+							<div className="grid grid-cols-2 gap-6 text-center">
+								<div className="space-y-4">
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Current Price</p>
+										<p className="text-lg font-bold text-green-700">${companyData.currentPrice?.toFixed(2)}</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Market Cap</p>
+										<p className="text-lg font-bold text-green-700">${(companyData.marketCap / 1e9).toFixed(2)}B</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">P/E Ratio</p>
+										<p className="text-lg font-bold text-green-700">{companyData.trailingPE?.toFixed(2)}</p>
+									</div>
+								</div>
+								<div className="space-y-4">
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">52 Week High</p>
+										<p className="text-lg font-bold text-green-700">${companyData.fiftyTwoWeekHigh?.toFixed(2)}</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">52 Week Low</p>
+										<p className="text-lg font-bold text-green-700">${companyData.fiftyTwoWeekLow?.toFixed(2)}</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Volume</p>
+										<p className="text-lg font-bold text-green-700">{companyData.volume?.toLocaleString()}</p>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+
+					<Card className="transform overflow-hidden rounded-lg border border-green-200 shadow-xl transition-transform">
+						<CardHeader className="bg-gradient-to-br from-sky-50 to-green-50 p-6 text-center">
+							<CardTitle className="text-lg font-bold tracking-wide text-green-900">📊 Key Metrics</CardTitle>
+						</CardHeader>
+						<CardContent className="rounded-b-lg bg-white p-6">
+							<div className="grid grid-cols-2 gap-6 text-center">
+								<div className="space-y-4">
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Revenue Growth</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.revenueGrowth * 100).toFixed(2)}%</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Profit Margin</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.profitMargins * 100).toFixed(2)}%</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Debt to Equity</p>
+										<p className="text-lg font-bold text-green-700">{companyData.debtToEquity?.toFixed(2)}</p>
+									</div>
+								</div>
+								<div className="space-y-4">
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">ROE</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.returnOnEquity * 100).toFixed(2)}%</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Beta</p>
+										<p className="text-lg font-bold text-green-700">{companyData.beta?.toFixed(2)}</p>
+									</div>
+									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
+										<p className="font-semibold text-sky-800">Dividend Yield</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.dividendYield * 100).toFixed(2)}%</p>
+									</div>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 			</div>
+			<Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+				<DialogContent className="bg-white">
+					<DialogHeader>
+						<DialogTitle className="text-green-800">{transactionType === "buy" ? "Buy" : "Sell"} Stock</DialogTitle>
+						<DialogDescription className="text-sky-700">
+							Enter the quantity of shares you want to {transactionType === "buy" ? "buy" : "sell"}.
+						</DialogDescription>
+					</DialogHeader>
+					<div className="py-4">
+						<p className="text-green-700">
+							<strong>Current Price:</strong> ${companyData.currentPrice?.toFixed(2)}
+						</p>
+						<div className="mt-4">
+							<label htmlFor="quantity" className="block text-sm font-medium text-green-700">
+								Number of Shares
+							</label>
+							<Input
+								id="quantity"
+								type="number"
+								value={quantity}
+								onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+								className="mt-1 border-green-300 focus:border-green-500 focus:ring-green-500"
+								min="1"
+							/>
+						</div>
+						<p className="mt-2 text-sky-700">
+							<strong>Total {transactionType === "buy" ? "Cost" : "Value"}:</strong> $
+							{(quantity * (companyData.currentPrice || 0)).toFixed(2)}
+						</p>
+					</div>
+					<DialogFooter>
+						<Button
+							onClick={handleTransaction}
+							className="to-blue-2000 bg-gradient-to-br from-blue-50 text-white hover:bg-green-600"
+						>
+							{transactionType === "buy" ? "Buy" : "Sell"} Shares
+						</Button>
+					</DialogFooter>
+				</DialogContent>
+			</Dialog>
 		</div>
 	)
 }
