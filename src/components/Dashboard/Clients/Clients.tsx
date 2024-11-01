@@ -2,7 +2,6 @@ import Sidebar from "@/components/Dashboard/Sidebar"
 import { useState, useEffect } from "react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
@@ -16,7 +15,6 @@ import {
 	AlertDialogFooter,
 	AlertDialogHeader,
 	AlertDialogTitle,
-	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 import axios from "axios"
@@ -37,7 +35,6 @@ import { baseApiUrl } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
 import { LoadingSpinner } from "@/components/ui/loading-spinner"
 import { StoreModel } from "@/store/useStore"
-import ClientDeleteDialog from "./ClientDeleteDialog"
 
 interface IClient {
 	id: string
@@ -75,7 +72,6 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 const Clients = () => {
 	const user = useStore((state: StoreModel) => state.user)
 	const currentClients = useStore((state: StoreModel) => state.managerClients)
-	const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
 	const navigate = useNavigate()
 	const [assets] = useState<Asset[]>(mockAssets)
 	const [loading, setLoading] = useState(false)

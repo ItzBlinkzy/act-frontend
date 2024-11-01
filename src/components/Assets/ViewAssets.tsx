@@ -5,7 +5,7 @@ import Fuse from "fuse.js"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowUpDown, Search } from "lucide-react"
@@ -53,7 +53,7 @@ const COLORS = ["#0088FE", "#00C49F", "#FFBB28", "#FF8042", "#8884D8"]
 
 export default function StocksAndCryptoPage() {
 	const navigate = useNavigate()
-	const [stocks, setStocks] = useState<TickerChoose[]>(stocksData)
+	const [stocks] = useState<TickerChoose[]>(stocksData)
 	const [filteredStocks, setFilteredStocks] = useState<TickerChoose[]>([])
 	const [searchTerm, setSearchTerm] = useState("")
 	const [displayedStocks, setDisplayedStocks] = useState<TickerChoose[]>([])
