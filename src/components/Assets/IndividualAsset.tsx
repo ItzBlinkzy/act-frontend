@@ -5,6 +5,7 @@ import Sidebar from "@/components/Dashboard/Sidebar"
 import axios from "axios"
 import { baseAiUrl } from "@/config/constants"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { ApexOptions } from "apexcharts"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import {
@@ -17,11 +18,19 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import { toast } from "@/hooks/use-toast"
-import { Check, ChevronsUpDown, ChevronDown, TrendingUp, TrendingDown, DollarSign, BarChart2 } from "lucide-react"
+import { Check, ChevronsUpDown, ChevronDown } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import useStore, { StoreModel } from "@/store/useStore"
+
+interface HistoricalData {
+	Date: string | Date // Use `string` if `Date` is received as a string, or `Date` if already a Date object
+	Open: number
+	High: number
+	Low: number
+	Close: number
+}
 
 const IndividualAsset = () => {
 	const params = useParams()
@@ -56,8 +65,7 @@ const IndividualAsset = () => {
 		getStockHistory()
 	}, [ticker])
 
-	const limitedHistoricalData = useMemo(() => historicalData.slice(-200), [historicalData])
-
+	const limitedHistoricalData: HistoricalData[] = useMemo(() => historicalData.slice(-200), [historicalData])
 	const candlestickSeries = useMemo(
 		() => [
 			{
@@ -75,7 +83,7 @@ const IndividualAsset = () => {
 		[limitedHistoricalData],
 	)
 
-	const chartOptions = useMemo(
+	const chartOptions: ApexOptions = useMemo(
 		() => ({
 			chart: {
 				type: "candlestick",
