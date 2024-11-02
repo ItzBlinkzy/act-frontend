@@ -180,7 +180,7 @@ const IndividualAsset = () => {
 									setTransactionType("buy")
 									setIsDialogOpen(true)
 								}}
-								className="to-blue-2000 bg-gradient-to-br from-blue-50 text-white hover:bg-green-600"
+								className="bg-green-400 text-white hover:bg-green-600"
 							>
 								Buy Stock
 							</Button>
@@ -326,10 +326,7 @@ const IndividualAsset = () => {
 						</p>
 					</div>
 					<DialogFooter>
-						<Button
-							onClick={handleTransaction}
-							className="to-blue-2000 bg-gradient-to-br from-blue-50 text-white hover:bg-green-600"
-						>
+						<Button onClick={handleTransaction} className="bg-green-400 text-white hover:bg-green-600">
 							{transactionType === "buy" ? "Buy" : "Sell"} Shares
 						</Button>
 					</DialogFooter>
