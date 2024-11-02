@@ -109,7 +109,7 @@ export default function StocksAndCryptoPage() {
 			<Sidebar />
 			<div className="w-full p-4">
 				<div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-					<Card className="border-green-200 shadow-lg">
+					<Card className=" shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Market Overview</CardTitle>
 						</CardHeader>
@@ -126,7 +126,7 @@ export default function StocksAndCryptoPage() {
 							</ResponsiveContainer>
 						</CardContent>
 					</Card>
-					<Card className="border-green-200 shadow-lg">
+					<Card className=" shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Sector Allocation</CardTitle>
 						</CardHeader>
@@ -153,7 +153,7 @@ export default function StocksAndCryptoPage() {
 						</CardContent>
 					</Card>
 				</div>
-				<Card className="mb-6 border-green-200 shadow-lg">
+				<Card className="mb-6 shadow-lg">
 					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 						<CardTitle className="text-green-800">Stock Search</CardTitle>
 					</CardHeader>

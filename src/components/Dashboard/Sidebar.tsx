@@ -63,7 +63,7 @@ export default function Sidebar() {
 	]
 
 	return (
-		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r border-slate-400 bg-gradient-to-tr from-green-200 to-sky-100">
+		<div className="sticky flex min-h-screen w-[300px] min-w-[300px] flex-col gap-4 border-r border-slate-500 bg-gradient-to-tr from-green-200 to-sky-100">
 			<div>
 				<UserItem />
 			</div>

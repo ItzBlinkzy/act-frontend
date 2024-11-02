@@ -134,7 +134,7 @@ export default function RecommendationsPage() {
 			<Sidebar />
 			<div className="container mx-auto p-4">
 				<h1 className="mb-4 text-2xl font-bold text-green-800">Stock Recommendations</h1>
-				<Card className="mb-6 border-green-200 shadow-lg">
+				<Card className="mb-6  shadow-lg">
 					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 						<CardTitle className="text-green-800">Search Recommendations</CardTitle>
 						<CardDescription className="text-sky-700">
@@ -171,7 +171,7 @@ export default function RecommendationsPage() {
 						<CardContent className="py-4 text-red-800">{error}</CardContent>
 					</Card>
 				)}
-				<Card className="border-green-200 shadow-lg">
+				<Card className=" shadow-lg">
 					<CardHeader className="bg-gradient-to-b from-green-50 to-sky-50">
 						<CardTitle className="text-green-800">Recommendations</CardTitle>
 						<CardDescription className="text-sky-700">

@@ -135,7 +135,7 @@ const IndividualAsset = () => {
 		<div className="flex h-full w-full bg-gradient-to-br from-green-200 to-sky-100">
 			<Sidebar />
 			<div className="w-full p-4">
-				<Card className="m-4 border-green-200 p-0 shadow-lg">
+				<Card className="m-4 p-0 shadow-lg">
 					<CardHeader className="bg-gradient-to-r from-green-50 to-sky-400">
 						<CardTitle className="p-0 text-3xl font-normal text-green-800">
 							{companyData.longName || companyData.company_name} (${ticker})
@@ -204,7 +204,7 @@ const IndividualAsset = () => {
 							</Button>
 						</div>
 						{selectedClient && (
-							<Card className="mt-6 border-green-200 shadow-md">
+							<Card className="mt-6 shadow-md">
 								<CardHeader className="bg-gradient-to-r from-green-100 to-sky-100">
 									<CardTitle className="text-green-800">Client Asset Information</CardTitle>
 								</CardHeader>
@@ -226,7 +226,7 @@ const IndividualAsset = () => {
 				</Card>
 				<div className="mb-8 grid grid-cols-1 gap-6 p-4 md:grid-cols-2">
 					{/* Stock Overview Card */}
-					<Card className="transform overflow-hidden rounded-lg border border-green-200 shadow-xl transition-transform">
+					<Card className="transform overflow-hidden rounded-lg border shadow-xl transition-transform">
 						<CardHeader className="bg-gradient-to-br from-green-50 to-sky-50 p-6 text-center">
 							<CardTitle className="text-lg font-bold tracking-wide text-green-900">📈 Stock Overview</CardTitle>
 						</CardHeader>
@@ -264,7 +264,7 @@ const IndividualAsset = () => {
 						</CardContent>
 					</Card>
 
-					<Card className="transform overflow-hidden rounded-lg border border-green-200 shadow-xl transition-transform">
+					<Card className="transform overflow-hidden rounded-lg border shadow-xl transition-transform">
 						<CardHeader className="bg-gradient-to-br from-sky-50 to-green-50 p-6 text-center">
 							<CardTitle className="text-lg font-bold tracking-wide text-green-900">📊 Key Metrics</CardTitle>
 						</CardHeader>

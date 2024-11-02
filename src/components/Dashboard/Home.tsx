@@ -55,10 +55,10 @@ const DashboardHome = () => {
 	}, [])
 
 	return (
-		<div className="flex h-full w-full bg-gradient-to-br from-green-100 to-sky-100">
+		<div className="flex h-full w-full bg-gradient-to-br from-green-50 to-sky-100">
 			<Sidebar />
 			<div className="flex w-full flex-col">
-				<Card className="m-4 border-green-200 p-0 shadow-lg">
+				<Card className="m-4 border p-0 shadow-lg">
 					<div className="mt-4 border-b border-b-slate-400 p-2">
 						<HomeIcon className="h-8 w-8 text-green-600" />
 					</div>
@@ -70,7 +70,7 @@ const DashboardHome = () => {
 					</CardTitle>
 				</Card>
 				<div className="grid w-full grid-cols-1 gap-6 p-4 md:grid-cols-2">
-					<Card className="border-green-200 shadow-lg">
+					<Card className="border  shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Quick Links</CardTitle>
 						</CardHeader>
@@ -103,7 +103,7 @@ const DashboardHome = () => {
 							</div>
 						</CardContent>
 					</Card>
-					<Card className="border-green-200 shadow-lg">
+					<Card className="border shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Recent Blog Posts</CardTitle>
 						</CardHeader>
@@ -121,14 +121,17 @@ const DashboardHome = () => {
 							</ScrollArea>
 						</CardContent>
 					</Card>
-					<Card className="border-green-200 shadow-lg md:col-span-2">
+					<Card className="border  shadow-lg md:col-span-2">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Popular Stocks</CardTitle>
 						</CardHeader>
 						<CardContent className="p-4">
-							<div className="flex flex-wrap gap-4 rounded-sm border border-green-200 p-4">
+							<div className="flex flex-wrap gap-4 rounded-sm border border p-4">
 								{topStocks.map((stock) => (
-									<div key={stock.symbol} className="grow-0 basis-64 rounded-lg border bg-gradient-to-r p-4">
+									<div
+										key={stock.symbol}
+										className="grow-0 basis-64 rounded-lg border bg-gradient-to-br from-purple-400/10 to-blue-100 p-4"
+									>
 										<h3 className="font-bold text-green-700">{stock.symbol}</h3>
 										<p className="text-sky-600">{stock.name}</p>
 										<p className="font-semibold text-green-600">${stock.value.toFixed(2)}</p>

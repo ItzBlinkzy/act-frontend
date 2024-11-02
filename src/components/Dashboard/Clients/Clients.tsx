@@ -165,7 +165,7 @@ const Clients = () => {
 					{isFundManager ? "Client Dashboard" : "Your Portfolio"}
 				</h1>
 				<div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-					<Card className="border-green-200 shadow-lg">
+					<Card className=" shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Performance Overview</CardTitle>
 						</CardHeader>
@@ -182,7 +182,7 @@ const Clients = () => {
 							</ResponsiveContainer>
 						</CardContent>
 					</Card>
-					<Card className="border-green-200 shadow-lg">
+					<Card className=" shadow-lg">
 						<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 							<CardTitle className="text-green-800">Asset Allocation</CardTitle>
 						</CardHeader>
@@ -232,7 +232,7 @@ const Clients = () => {
 							</TabsList>
 						</div>
 						<TabsContent value="overview">
-							<Card className="border-green-200">
+							<Card className="">
 								<CardHeader className="bg-gradient-to-r from-green-50 to-sky-50">
 									<CardTitle className="text-green-800">Portfolio Summary</CardTitle>
 								</CardHeader>
@@ -244,7 +244,7 @@ const Clients = () => {
 						</TabsContent>
 						{isFundManager && (
 							<TabsContent value="clients">
-								<Card className="border-green-200">
+								<Card className="">
 									<CardHeader className="bg-gradient-to-t from-green-50 to-sky-50">
 										<CardTitle className="text-green-800">{currentClients?.length} Available Clients</CardTitle>
 									</CardHeader>
