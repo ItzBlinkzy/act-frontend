@@ -72,7 +72,7 @@ const Login = () => {
 					<div className="grid grid-cols-2 gap-6">
 						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
 							<FaGithub className="mr-2 h-6 w-6" />
-							Github
+							GitHub
 						</Button>
 						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
 							<FcGoogle className="mr-2 h-6 w-6" />

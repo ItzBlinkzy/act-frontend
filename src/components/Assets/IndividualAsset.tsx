@@ -145,64 +145,71 @@ const IndividualAsset = () => {
 						<div className="mb-8">
 							<ApexCharts options={chartOptions} series={candlestickSeries} type="candlestick" height={350} />
 						</div>
-						<div className="mb-4 flex items-center space-x-4">
-							<Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
-								<PopoverTrigger asChild>
-									<Button className="flex w-[200px] items-center justify-between border border-green-300 bg-white text-green-700">
-										<span>
-											{selectedClient
-												? clients.find((client) => client.id === selectedClient)?.company_name
-												: "Select a client..."}
-										</span>
-										<ChevronDown className="h-5 w-5 text-green-700" />
-									</Button>
-								</PopoverTrigger>
-								<PopoverContent className="w-[200px] border border-green-300 bg-white p-2">
-									<Command>
-										<CommandInput placeholder="Search clients..." />
-										<CommandList>
-											{(clients && clients.length > 0
-												? clients
-												: [
-														{ id: 1, company_name: "Placeholder Client 1" },
-														{ id: 2, company_name: "Placeholder Client 2" },
-														{ id: 3, company_name: "Placeholder Client 3" },
-													]
-											).map((client) => (
-												<CommandItem
-													key={client.id}
-													onSelect={() => {
-														setSelectedClient(client.id)
-														setIsPopoverOpen(false)
-													}}
-												>
-													{client.company_name}
-												</CommandItem>
-											))}
-										</CommandList>
-									</Command>
-								</PopoverContent>
-							</Popover>
-							<Button
-								onClick={() => {
-									setTransactionType("buy")
-									setIsDialogOpen(true)
-								}}
-								className="bg-green-400 text-white hover:bg-green-600"
-							>
-								Buy Stock
-							</Button>
-							<Button
-								variant="outline"
-								onClick={() => {
-									setTransactionType("sell")
-									setIsDialogOpen(true)
-								}}
-								className="border-sky-300 text-sky-700 hover:bg-sky-50"
-							>
-								Sell Stock
-							</Button>
+						<div className="mb-4 flex items-center justify-between">
+							<div className="flex items-start space-x-4">
+								<Popover open={isPopoverOpen} onOpenChange={setIsPopoverOpen}>
+									<PopoverTrigger asChild>
+										<Button className="flex w-[200px] items-center justify-between border border-green-300 bg-white text-green-700">
+											<span>
+												{selectedClient
+													? clients.find((client) => client.id === selectedClient)?.company_name
+													: "Select a client..."}
+											</span>
+											<ChevronDown className="h-5 w-5 text-green-700" />
+										</Button>
+									</PopoverTrigger>
+									<PopoverContent className="w-[200px] border border-green-300 bg-white p-2">
+										<Command>
+											<CommandInput placeholder="Search clients..." />
+											<CommandList>
+												{(clients && clients.length > 0
+													? clients
+													: [
+															{ id: 1, company_name: "Placeholder Client 1" },
+															{ id: 2, company_name: "Placeholder Client 2" },
+															{ id: 3, company_name: "Placeholder Client 3" },
+														]
+												).map((client) => (
+													<CommandItem
+														key={client.id}
+														onSelect={() => {
+															setSelectedClient(client.id)
+															setIsPopoverOpen(false)
+														}}
+													>
+														{client.company_name}
+													</CommandItem>
+												))}
+											</CommandList>
+										</Command>
+									</PopoverContent>
+								</Popover>
+
+								<Button
+									onClick={() => {
+										setTransactionType("buy")
+										setIsDialogOpen(true)
+									}}
+									className="bg-green-400 text-white hover:bg-green-600"
+								>
+									Buy Stock
+								</Button>
+								<Button
+									variant="outline"
+									onClick={() => {
+										setTransactionType("sell")
+										setIsDialogOpen(true)
+									}}
+									className="border-sky-300 text-sky-700 hover:bg-sky-50"
+								>
+									Sell Stock
+								</Button>
+							</div>
+							<div className="rounded-lg border border-slate-400 bg-green-100 px-4 py-2">
+								<span className="text-3xl font-bold text-green-600">${companyData.currentPrice.toFixed(2)}</span>
+							</div>
 						</div>
+
 						{selectedClient && (
 							<Card className="mt-6 shadow-md">
 								<CardHeader className="bg-gradient-to-r from-green-100 to-sky-100">
