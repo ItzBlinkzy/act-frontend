@@ -142,7 +142,7 @@ export default function RecommendationsPage() {
 						</CardDescription>
 					</CardHeader>
 					<CardContent>
-						<form onSubmit={handleSearch} className="flex space-x-2">
+						<form onSubmit={handleSearch} className="flex space-x-2 p-4">
 							<Input
 								type="text"
 								placeholder="Search stocks..."

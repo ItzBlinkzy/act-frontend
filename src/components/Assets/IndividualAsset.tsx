@@ -206,7 +206,7 @@ const IndividualAsset = () => {
 								</Button>
 							</div>
 							<div className="rounded-lg border border-slate-400 bg-green-100 px-4 py-2">
-								<span className="text-3xl font-bold text-green-600">${companyData.currentPrice.toFixed(2)}</span>
+								<span className="text-3xl font-bold text-green-600">${companyData?.currentPrice?.toFixed(2)}</span>
 							</div>
 						</div>
 
@@ -280,11 +280,11 @@ const IndividualAsset = () => {
 								<div className="space-y-4">
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Revenue Growth</p>
-										<p className="text-lg font-bold text-green-700">{(companyData.revenueGrowth * 100).toFixed(2)}%</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.revenueGrowth * 100)?.toFixed(2)}%</p>
 									</div>
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Profit Margin</p>
-										<p className="text-lg font-bold text-green-700">{(companyData.profitMargins * 100).toFixed(2)}%</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.profitMargins * 100)?.toFixed(2)}%</p>
 									</div>
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Debt to Equity</p>
@@ -294,7 +294,7 @@ const IndividualAsset = () => {
 								<div className="space-y-4">
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">ROE</p>
-										<p className="text-lg font-bold text-green-700">{(companyData.returnOnEquity * 100).toFixed(2)}%</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.returnOnEquity * 100)?.toFixed(2)}%</p>
 									</div>
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Beta</p>
@@ -302,7 +302,7 @@ const IndividualAsset = () => {
 									</div>
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Dividend Yield</p>
-										<p className="text-lg font-bold text-green-700">{(companyData.dividendYield * 100).toFixed(2)}%</p>
+										<p className="text-lg font-bold text-green-700">{(companyData.dividendYield * 100)?.toFixed(2)}%</p>
 									</div>
 								</div>
 							</div>
@@ -345,6 +345,7 @@ const IndividualAsset = () => {
 							{transactionType === "buy" ? "Buy" : "Sell"} Shares
 						</Button>
 					</DialogFooter>
+					p
 				</DialogContent>
 			</Dialog>
 		</div>

@@ -58,8 +58,7 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 			}
 		}
 		verifyCookie()
-		//eslint-disable-next-line
-	}, [navigate])
+	}, [])
 
 	// Loading or unauthorized
 	if (loading) {

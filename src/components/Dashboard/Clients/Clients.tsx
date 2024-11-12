@@ -196,7 +196,7 @@ const Clients = () => {
 										outerRadius={80}
 										fill="#8884d8"
 										dataKey="value"
-										label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+										label={({ name, percent }) => `${name} ${(percent * 100)?.toFixed(0)}%`}
 									>
 										{assets.map((_, index) => (
 											<Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
@@ -214,7 +214,7 @@ const Clients = () => {
 						className="mb-6 rounded-md bg-white shadow-md"
 					>
 						<div className="p-4">
-							<TabsList className="bg-gradient-to-r from-green-100 to-sky-100">
+							<TabsList className="border border-slate-400 bg-gradient-to-r from-green-100 to-sky-100">
 								<TabsTrigger
 									value="overview"
 									className="data-[state=active]:bg-white data-[state=active]:text-green-800"
