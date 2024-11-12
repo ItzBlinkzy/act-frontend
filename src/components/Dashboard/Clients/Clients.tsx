@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { useNavigate } from "react-router-dom"
 import useStore from "@/store/useStore"
+import TimeAgo from "react-timeago"
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -253,7 +254,6 @@ const Clients = () => {
 											<TableHeader>
 												<TableRow className="bg-green-50">
 													<TableHead className="text-green-800">Client</TableHead>
-													<TableHead className="text-green-800">Assets</TableHead>
 													<TableHead className="text-green-800">Last Updated</TableHead>
 													<TableHead className="text-green-800">Actions</TableHead>
 												</TableRow>
@@ -273,30 +273,37 @@ const Clients = () => {
 														</TableCell>
 													</TableRow>
 												)}
-												{currentClients?.map((client: IClient) => (
-													<TableRow key={client.id} className="hover:bg-green-50">
-														<TableCell className="font-bold text-green-700">{client.company_name}</TableCell>
-														<TableCell className="text-sky-600">$9,999,999,999</TableCell>
-														<TableCell className="text-sky-600">{new Date(client.updated_at).toString()}</TableCell>
-														<TableCell>
-															<Button
-																onClick={() => handleClientSelect(client)}
-																className="mr-2 bg-green-500 text-white hover:bg-green-600"
-															>
-																View
-															</Button>
-															<Button
-																onClick={() => {
-																	setClientToDelete(client)
-																	setAlertDialogOpen(true)
-																}}
-																className="bg-black text-white hover:bg-red-500"
-															>
-																Delete
-															</Button>
-														</TableCell>
-													</TableRow>
-												))}
+												{currentClients?.length &&
+													currentClients.map((client: IClient) => (
+														<TableRow key={client.id} className="hover:bg-green-50">
+															<TableCell className="font-bold text-green-700">{client.company_name}</TableCell>
+															<TableCell className="text-sky-600">
+																<div className="group relative">
+																	<TimeAgo date={new Date(client.updated_at)} />
+																	<div className="absolute bottom-full left-0 hidden w-auto rounded bg-gray-700 px-2 py-1 text-white group-hover:block">
+																		{new Date(client.updated_at).toLocaleString()}
+																	</div>
+																</div>
+															</TableCell>
+															<TableCell>
+																<Button
+																	onClick={() => handleClientSelect(client)}
+																	className="mr-2 bg-green-500 text-white hover:bg-green-600"
+																>
+																	View
+																</Button>
+																<Button
+																	onClick={() => {
+																		setClientToDelete(client)
+																		setAlertDialogOpen(true)
+																	}}
+																	className="bg-black text-white hover:bg-red-500"
+																>
+																	Delete
+																</Button>
+															</TableCell>
+														</TableRow>
+													))}
 											</TableBody>
 										</Table>
 									</CardContent>
