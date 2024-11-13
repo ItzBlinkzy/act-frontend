@@ -194,7 +194,7 @@ const Client = () => {
 													<TableCell className="text-sky-600">${stock.currentPrice?.toFixed(2)}</TableCell>
 													<TableCell className="text-green-700 ">${stock.totalValue?.toFixed(2)}</TableCell>
 													<TableCell className="text-green-700">
-														{((stock.totalValue / totalPortfolioValue) * 100)?.toFixed(2)}%
+														{(((stock.totalValue || 0) / totalPortfolioValue) * 100)?.toFixed(2)}%
 													</TableCell>
 												</TableRow>
 											))

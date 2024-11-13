@@ -12,6 +12,8 @@ import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import { FcGoogle } from "react-icons/fc"
 import { FaGithub } from "react-icons/fa"
+import { handleGithubLogin, handleGoogleLogin, getSocialLoginEmail } from "@/utils/socialLogin.js"
+
 const Login = () => {
 	const navigate = useNavigate()
 	const [email, setEmail] = useState("")
@@ -70,11 +72,19 @@ const Login = () => {
 				</CardHeader>
 				<CardContent className="grid gap-4 p-4 pt-6">
 					<div className="grid grid-cols-2 gap-6">
-						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
+						<Button
+							variant="outline"
+							className="border-green-300 bg-white text-gray-700 hover:bg-gray-100"
+							onClick={handleGithubLogin}
+						>
 							<FaGithub className="mr-2 h-6 w-6" />
 							GitHub
 						</Button>
-						<Button variant="outline" className="border-green-300 bg-white text-gray-700 hover:bg-gray-100">
+						<Button
+							variant="outline"
+							className="border-green-300 bg-white text-gray-700 hover:bg-gray-100"
+							onClick={handleGoogleLogin}
+						>
 							<FcGoogle className="mr-2 h-6 w-6" />
 							Google
 						</Button>
