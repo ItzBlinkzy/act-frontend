@@ -44,11 +44,6 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 					// Retry up to 2 more times
 					await verifyCookie(retryCount + 1)
 				} else {
-					toast({
-						title: "ERROR PROTECTED ROUTE",
-						description: "Should be logged out.",
-						variant: "destructive",
-					})
 					console.log(err)
 					navigate("/login")
 					setAuthenticated(false)
