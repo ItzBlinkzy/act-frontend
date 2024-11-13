@@ -24118,5 +24118,45 @@
   {
     "company_name": "Zynex, Inc.",
     "ticker": "ZYXI"
+  },
+  {
+    "company_name": "Bitcoin",
+    "ticker": "BTC-USD"
+  },
+  {
+    "company_name": "Ethereum",
+    "ticker": "ETH-USD"
+  },
+  {
+    "company_name": "Litecoin",
+    "ticker": "LTC-USD"
+  },
+  {
+    "company_name": "Ripple",
+    "ticker": "XRP-USD"
+  },
+  {
+    "company_name": "Cardano",
+    "ticker": "ADA-USD"
+  },
+  {
+    "company_name": "Polkadot",
+    "ticker": "DOT-USD"
+  },
+  {
+    "company_name": "Bitcoin Cash",
+    "ticker": "BCH-USD"
+  },
+  {
+    "company_name": "Stellar",
+    "ticker": "XLM-USD"
+  },
+  {
+    "company_name": "Chainlink",
+    "ticker": "LINK-USD"
+  },
+  {
+    "company_name": "Binance Coin",
+    "ticker": "BNB-USD"
   }
 ]
