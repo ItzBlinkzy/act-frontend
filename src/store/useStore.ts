@@ -1,4 +1,5 @@
 import { create } from "zustand"
+import { persist } from "zustand/middleware"
 
 // Define the types for the store's state and actions
 
@@ -8,8 +9,7 @@ export interface UserInfo {
 	lastName: string
 	email: string
 	userType: "Fund Manager" | "Fund Administrator" | null
-	usingSocialLogin: boolean
-	credit: number
+	credit: number | null
 }
 
 interface IClient {
@@ -25,9 +25,11 @@ export interface StoreModel {
 	setUser: (userInfo: UserInfo) => void
 	managerClients: IClient[]
 	setManagerClients: (clients: IClient[]) => void
+	usingSocialLogin: boolean
+	setUsingSocialLogin: (value: boolean) => void
 }
 
-const useStore = create<StoreModel>((set) => ({
+const useStore = create<StoreModel>()((set) => ({
 	user: null, // initial user state is null
 	setUser: (userInfo: UserInfo) =>
 		set((state) => ({
@@ -38,6 +40,28 @@ const useStore = create<StoreModel>((set) => ({
 		set(() => ({
 			managerClients: clients, // correct usage of the spread operator
 		})),
+	usingSocialLogin: false, // Initial state for usingSocialLogin
+	setUsingSocialLogin: (value: boolean) =>
+		set(() => ({
+			usingSocialLogin: value,
+		})),
 }))
 
+const usePersistedStore = create<Pick<StoreModel, "usingSocialLogin" | "setUsingSocialLogin">>()(
+	persist(
+		(set) => ({
+			usingSocialLogin: false,
+			setUsingSocialLogin: (value: boolean) => set(() => ({ usingSocialLogin: value })),
+		}),
+		{
+			name: "using-social-login-storage", // Choose an appropriate name for localStorage key
+			partialize: (state) => ({
+				usingSocialLogin: state.usingSocialLogin,
+			}), // Only persist usingSocialLogin
+		},
+	),
+)
+
+// Export stores as default exports for consistency
 export default useStore
+export { usePersistedStore }

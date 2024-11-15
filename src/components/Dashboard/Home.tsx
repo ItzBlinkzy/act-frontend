@@ -100,7 +100,7 @@ const DashboardHome = () => {
 									>
 										Stocks & Crypto
 									</Button>
-								</Link>3
+								</Link>
 							</div>
 						</CardContent>
 					</Card>

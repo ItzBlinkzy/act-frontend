@@ -7,10 +7,11 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { supabase } from "@/supabaseClient"
 import { toast } from "@/hooks/use-toast"
 import { baseApiUrl } from "@/config/constants"
 import axios from "axios"
-import useStore, { StoreModel } from "@/store/useStore"
+import useStore, { StoreModel, usePersistedStore } from "@/store/useStore"
 import { Badge } from "@/components/ui/badge"
 import { useNavigate } from "react-router-dom"
 import { MenuIcon } from "lucide-react"
@@ -27,21 +28,52 @@ export default function UserItem() {
 	}
 	const handleLogout = async () => {
 		try {
-			const response = await axios.post(`${baseApiUrl}/logout`, {}, { withCredentials: true })
-			if (response.status === 200) {
-				navigate("/login")
-				toast({
-					title: "Signed Out Successfully",
-					description: "You have been signed out of your account.",
-					variant: "default",
-				})
+			const usingSocialLogin = usePersistedStore.getState().usingSocialLogin
+
+			if (usingSocialLogin) {
+				// Supabase social login logout
+				const { error } = await supabase.auth.signOut()
+				if (error) {
+					// Notify the user about the failure with a destructive toast
+					toast({
+						title: "Logout Failed",
+						description: "Could not log you out of your account (oauth). Please try again later.",
+						variant: "destructive",
+					})
+					throw new Error("Failed to log out from Supabase")
+				}
 			}
-		} catch (err: any) {
+
+      else {
+				// Backend-managed logout for email/password users
+				const response = await axios.post(`${baseApiUrl}/logout`, {}, { withCredentials: true })
+				if (response.status !== 200) {
+					throw new Error("Failed to log out from backend")
+				}
+			}
+
+			// Clear global and persisted state
+			useStore.setState({
+				user: null,
+				managerClients: [],
+			})
+			usePersistedStore.getState().setUsingSocialLogin(false)
+
+			// Navigate to login page and show success toast
+			navigate("/login")
 			toast({
-				title: "Internal Server Error ",
-				description: "Could not log you out. Please try again later",
+				title: "Signed Out Successfully",
+				description: "You have been signed out of your account.",
+				variant: "default",
+			})
+		} catch (err: any) {
+			// General error handling
+			toast({
+				title: "Internal Server Error",
+				description: "Could not log you out. Please try again later.",
 				variant: "destructive",
 			})
+			console.error("Logout Error:", err)
 		}
 	}
 

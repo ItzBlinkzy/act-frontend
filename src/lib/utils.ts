@@ -5,7 +5,7 @@ export function cn(...inputs: ClassValue[]) {
 	return twMerge(clsx(inputs))
 }
 
-export function mapUserIDType(userIdType: 1 | 2) {
+export function mapUserIDType(userIdType: number) {
 	if (userIdType === 1) {
 		return "Fund Administrator"
 	} else if (userIdType === 2) {

@@ -12,7 +12,8 @@ import { useNavigate } from "react-router-dom"
 import { LoadingSpinner } from "../ui/loading-spinner"
 import { FcGoogle } from "react-icons/fc"
 import { FaGithub } from "react-icons/fa"
-import { handleGithubLogin, handleGoogleLogin, getSocialLoginEmail } from "@/utils/socialLogin.js"
+import { handleGithubLogin, handleGoogleLogin } from "@/lib/socialLogin.js"
+import { usePersistedStore } from "@/store/useStore"
 
 const Login = () => {
 	const navigate = useNavigate()
@@ -20,6 +21,8 @@ const Login = () => {
 	const [password, setPassword] = useState("")
 	const [loading, setLoading] = useState(false)
 	const setManagerClients = useStore((state: StoreModel) => state.setManagerClients)
+	const setUser = useStore((state: StoreModel) => state.setUser)
+  const setUsingSocialLogin = usePersistedStore((state) => state.setUsingSocialLogin);
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {
@@ -35,6 +38,13 @@ const Login = () => {
 	const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setPassword(event.target.value)
 	}
+
+  const handleGoogleClick = async () => {
+    setUsingSocialLogin(true); 
+    await handleGoogleLogin(setUser, navigate);
+    console.log("Updated state to usingSocialLogin:", usePersistedStore.getState().usingSocialLogin);
+};
+
 
 	const handleLogin = async () => {
 		setLoading(true)
@@ -75,7 +85,11 @@ const Login = () => {
 						<Button
 							variant="outline"
 							className="border-green-300 bg-white text-gray-700 hover:bg-gray-100"
-							onClick={handleGithubLogin}
+							onClick={() => {
+								setUsingSocialLogin(true)
+								handleGithubLogin()
+								console.log("Updated state to usingSocialLogin:", useStore.getState().usingSocialLogin)
+							}}
 						>
 							<FaGithub className="mr-2 h-6 w-6" />
 							GitHub
@@ -83,7 +97,7 @@ const Login = () => {
 						<Button
 							variant="outline"
 							className="border-green-300 bg-white text-gray-700 hover:bg-gray-100"
-							onClick={handleGoogleLogin}
+							onClick={handleGoogleClick}
 						>
 							<FcGoogle className="mr-2 h-6 w-6" />
 							Google
