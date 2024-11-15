@@ -26,6 +26,8 @@ declare global {
 export function PayPal({ creditPurchaseValue }: PayPalProps): JSX.Element {
 	const paypal = useRef<HTMLDivElement | null>(null)
 	const user = useStore((state) => state.user)
+  const setUser = useStore((state) => state.setUser)
+
 	const navigate = useNavigate()
 
 	useEffect(() => {
@@ -73,6 +75,7 @@ export function PayPal({ creditPurchaseValue }: PayPalProps): JSX.Element {
 								variant: "default",
 							})
 							navigate("/dashboard")
+
 						}
 					} catch (e: any) {
 						console.log("Error with backend")
