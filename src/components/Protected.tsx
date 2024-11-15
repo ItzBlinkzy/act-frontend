@@ -32,6 +32,8 @@ const Protected: React.FC<ProtectedProps> = ({ children, fundManagerOnly = false
 							firstName: response.data.user.first_name,
 							lastName: response.data.user.last_name,
 							userType: mapUserIDType(response.data.user.type_user_id) || null,
+              credit: response.data.user.credit,
+              usingSocialLogin: false,
 						})
 					}
 					setManagerClients(response.data.clients)

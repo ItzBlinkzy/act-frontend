@@ -15,5 +15,7 @@ module.exports = {
 		"react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
 		"tailwindcss/no-custom-classname": "off",
 		"@typescript-eslint/no-explicit-any": "off",
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": "error",
 	},
 }

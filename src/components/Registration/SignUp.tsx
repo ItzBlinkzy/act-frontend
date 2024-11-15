@@ -25,7 +25,9 @@ export default function SignUp() {
 		email: "",
 		password: "",
 		type_user_id: 0,
+		login_method: "default",
 	})
+  console.log(formData)
 
 	const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
 		if (event.key === "Enter") {

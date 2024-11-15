@@ -13,6 +13,7 @@ import ViewAssets from "./components/Assets/ViewAssets"
 import SignUp from "./components/Registration/SignUp"
 import Client from "./components/Dashboard/Clients/Client"
 import IndividualAsset from "./components/Assets/IndividualAsset"
+import PurchaseCredit from "./components/PurchaseCredit/PurchaseCredit"
 const routes = [
 	{ path: "/", element: <Home /> },
 	{ path: "/login", element: <Login /> },
@@ -70,6 +71,14 @@ const routes = [
 		element: (
 			<Protected>
 				<Notifications />
+			</Protected>
+		),
+	},
+	{
+		path: "/dashboard/credit",
+		element: (
+			<Protected>
+				<PurchaseCredit />
 			</Protected>
 		),
 	},

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "lucide-react"
+import { toast } from "@/hooks/use-toast"
 
 interface BlogPost {
 	id: number
@@ -99,7 +100,7 @@ const DashboardHome = () => {
 									>
 										Stocks & Crypto
 									</Button>
-								</Link>
+								</Link>3
 							</div>
 						</CardContent>
 					</Card>
