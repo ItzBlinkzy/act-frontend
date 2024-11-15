@@ -5,15 +5,18 @@ import { usePersistedStore } from "@/store/useStore"
 import { UserInfo } from "@/store/useStore"
 
 const redirectUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://act-frontend.netlify.app/dashboard"
-    : "http://localhost:5173/dashboard";
+	process.env.NODE_ENV === "production"
+		? "https://act-frontend.netlify.app/dashboard"
+		: "http://localhost:5173/dashboard"
 
-const handleGoogleLogin = async (setUser: (user: UserInfo) => void, navigate: (path: string) => void): Promise<void> => {
+const handleGoogleLogin = async (
+	setUser: (user: UserInfo) => void,
+	navigate: (path: string) => void,
+): Promise<void> => {
 	try {
 		const { data, error } = await supabase.auth.signInWithOAuth({
 			provider: "google",
-      options: {redirectTo: redirectUrl}
+			options: { redirectTo: redirectUrl },
 		})
 		if (error) {
 			throw new Error(`Google login failed: ${error.message}`)
@@ -78,6 +81,7 @@ export default handleGoogleLogin
 const handleGithubLogin = async (): Promise<void> => {
 	const { data, error } = await supabase.auth.signInWithOAuth({
 		provider: "github",
+		options: { redirectTo: redirectUrl },
 	})
 
 	if (error) {
