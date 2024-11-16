@@ -13,6 +13,17 @@ export function MainNav({ items }: MainNavProps) {
 	const user = useStore((state: StoreModel) => state.user)
 
 	const userCredit = user?.credit || 0
+
+	// Reactive filtering based on the user's email
+	const filteredItems =
+		items?.filter((currLink) => {
+			// Only filter out "Purchase Credit" if user.email exists
+			if (!user?.email) {
+				return currLink.title !== "Purchase Credit"
+			}
+			return true
+		}) || []
+
 	return (
 		<div className="mx-5 flex w-full justify-between">
 			<div className="flex items-center space-x-2">
@@ -22,7 +33,7 @@ export function MainNav({ items }: MainNavProps) {
 				</Link>
 				{items?.length ? (
 					<nav className="flex gap-6 pl-5">
-						{items.map(
+						{filteredItems.map(
 							(item, index) =>
 								item.href && (
 									<Link
