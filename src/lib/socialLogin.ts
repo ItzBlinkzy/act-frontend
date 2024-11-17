@@ -5,7 +5,7 @@ import { usePersistedStore } from "@/store/useStore"
 import { UserInfo } from "@/store/useStore"
 
 const redirectUrl =
-	process.env.NODE_ENV === "production"
+	import.meta.env.VITE_CURRENT_ENV === "production"
 		? "https://act-frontend.netlify.app/dashboard"
 		: "http://localhost:5173/dashboard"
 
