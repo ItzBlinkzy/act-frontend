@@ -19,9 +19,12 @@ export default function UserItem() {
 	const navigate = useNavigate()
 	const user = useStore((state: StoreModel) => state.user)
 	let initials = "??"
-	if (user?.firstName?.length || user?.lastName?.length) {
-		initials = (user.firstName[0] + user.lastName[0]).toLocaleUpperCase()
+	if (user) {
+		const firstInitial = user.firstName?.[0]?.toUpperCase() || ""
+		const lastInitial = user.lastName?.[0]?.toUpperCase() || ""
+		initials = firstInitial + lastInitial
 	}
+
 	const getBadgeColour = (): string => {
 		if (user?.userType === "Fund Manager") return "bg-orange-400"
 		return "bg-blue-600"
@@ -42,9 +45,7 @@ export default function UserItem() {
 					})
 					throw new Error("Failed to log out from Supabase")
 				}
-			}
-
-      else {
+			} else {
 				// Backend-managed logout for email/password users
 				const response = await axios.post(`${baseApiUrl}/logout`, {}, { withCredentials: true })
 				if (response.status !== 200) {
