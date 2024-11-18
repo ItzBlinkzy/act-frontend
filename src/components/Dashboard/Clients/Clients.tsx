@@ -95,7 +95,7 @@ const Clients = () => {
 				toast({
 					title: `Client successfully deleted.`,
 					description: `${client.company_name} was successfully deleted.`,
-					variant: "default",
+					variant: "default", 
 				})
 			}
 		} catch (e: any) {

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { useState, useEffect} from "react"
 import useStore, { StoreModel } from "@/store/useStore"
 import { baseApiUrl } from "@/config/constants"
 import { toast } from "@/hooks/use-toast"
@@ -30,6 +30,10 @@ const Login = () => {
 			handleLogin()
 		}
 	}
+  useEffect(() => {
+    // default login method is no social login until they click either login social buttons
+    setUsingSocialLogin(false)
+  }, [])
 
 	const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(event.target.value)
@@ -40,7 +44,7 @@ const Login = () => {
 	}
 
   const handleGoogleClick = async () => {
-    setUsingSocialLogin(true); 
+    setUsingSocialLogin(true);
     await handleGoogleLogin(setUser, navigate);
     console.log("Updated state to usingSocialLogin:", usePersistedStore.getState().usingSocialLogin);
 };
