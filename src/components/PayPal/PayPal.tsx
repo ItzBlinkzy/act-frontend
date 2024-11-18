@@ -3,6 +3,7 @@ import { toast } from "@/hooks/use-toast"
 import axios from "axios"
 import { baseApiUrl } from "@/config/constants"
 import useStore from "@/store/useStore"
+import { usePersistedStore } from "@/store/useStore"
 import { useNavigate } from "react-router-dom"
 interface PayPalProps {
 	creditPurchaseValue: number
@@ -27,8 +28,10 @@ export function PayPal({ creditPurchaseValue }: PayPalProps): JSX.Element {
 	const paypal = useRef<HTMLDivElement | null>(null)
 	const user = useStore((state) => state.user)
   const setUser = useStore((state) => state.setUser)
-
 	const navigate = useNavigate()
+	const usingSocialLogin = usePersistedStore((state) => state.usingSocialLogin)
+	const setUsingSocialLogin = usePersistedStore((state) => state.setUsingSocialLogin)
+
 
 	useEffect(() => {
 		if (!window.paypal) {
