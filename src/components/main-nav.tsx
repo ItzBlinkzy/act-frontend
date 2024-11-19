@@ -12,8 +12,7 @@ interface MainNavProps {
 export function MainNav({ items }: MainNavProps) {
 	const user = useStore((state: StoreModel) => state.user)
 
-	const userCredit = user?.credit || 0
-
+	const userCredit = useStore((state: StoreModel) => state.user?.credit || 0);
 	// Reactive filtering based on the user's email
 	const filteredItems =
 		items?.filter((currLink) => {

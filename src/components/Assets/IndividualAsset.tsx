@@ -294,7 +294,9 @@ const IndividualAsset = () => {
 								<div className="space-y-4">
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">ROE</p>
-										<p className="text-lg font-bold text-green-700">{(companyData.returnOnEquity * 100)?.toFixed(2)}%</p>
+										<p className="text-lg font-bold text-green-700">
+											{(companyData.returnOnEquity * 100)?.toFixed(2)}%
+										</p>
 									</div>
 									<div className="rounded-lg bg-gradient-to-br from-blue-50 to-blue-200 p-4 shadow-inner">
 										<p className="font-semibold text-sky-800">Beta</p>

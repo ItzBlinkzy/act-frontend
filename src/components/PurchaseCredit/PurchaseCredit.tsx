@@ -7,7 +7,7 @@ import { toast } from "@/hooks/use-toast"
 import { PayPal } from "@/components/PayPal/PayPal"
 
 const PurchaseAmount = () => {
-	const [amountToPurchase, setAmountToPurchase] = useState(50)
+	const [amountToPurchase, setAmountToPurchase] = useState(5.00)
 
 	const incrementAmount = () => {
 		setAmountToPurchase((prev) => prev + 5)
@@ -21,7 +21,6 @@ const PurchaseAmount = () => {
 		const value = parseFloat(e.target.value)
 		setAmountToPurchase(value)
 	}
-
 
 	return (
 		<div className="flex h-screen w-full items-center justify-center bg-gradient-to-br from-green-50 to-sky-100 p-4">

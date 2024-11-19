@@ -2,8 +2,9 @@ import React, { useRef, useEffect } from "react"
 import { toast } from "@/hooks/use-toast"
 import axios from "axios"
 import { baseApiUrl } from "@/config/constants"
-import useStore from "@/store/useStore"
+import useStore, { UserInfo } from "@/store/useStore"
 import { usePersistedStore } from "@/store/useStore"
+import { StoreModel } from "@/store/useStore"
 import { useNavigate } from "react-router-dom"
 interface PayPalProps {
 	creditPurchaseValue: number
@@ -27,11 +28,8 @@ declare global {
 export function PayPal({ creditPurchaseValue }: PayPalProps): JSX.Element {
 	const paypal = useRef<HTMLDivElement | null>(null)
 	const user = useStore((state) => state.user)
-  const setUser = useStore((state) => state.setUser)
 	const navigate = useNavigate()
-	const usingSocialLogin = usePersistedStore((state) => state.usingSocialLogin)
-	const setUsingSocialLogin = usePersistedStore((state) => state.setUsingSocialLogin)
-
+	const setUser = useStore((state: StoreModel) => state.setUser)
 
 	useEffect(() => {
 		if (!window.paypal) {
@@ -70,15 +68,19 @@ export function PayPal({ creditPurchaseValue }: PayPalProps): JSX.Element {
 							{},
 							{ withCredentials: true },
 						)
+						const updatedCredit = (user?.credit || 0) + creditPurchaseValue
 
 						if (response.status === 200) {
+							setUser({
+								...user, // Spread the current user object
+								credit: updatedCredit, // Update only the credit field
+							} as UserInfo)
 							toast({
 								title: "Purchase Successful",
 								description: `You have purchased $${creditPurchaseValue?.toFixed(2)} credits.`,
 								variant: "default",
 							})
 							navigate("/dashboard")
-
 						}
 					} catch (e: any) {
 						console.log("Error with backend")
