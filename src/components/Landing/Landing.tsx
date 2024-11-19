@@ -2,8 +2,10 @@ import Hero from "@/components/Landing/Hero"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import aiPowered from "@/assets/ai_powered.jpg"
+import { useNavigate } from "react-router-dom"
 
 const Landing = () => {
+	const navigate = useNavigate()
 	return (
 		<div className="flex w-full flex-col items-center justify-center bg-gradient-to-br from-white to-green-100">
 			<Hero />
@@ -76,7 +78,13 @@ const Landing = () => {
 								type="email"
 								placeholder="Enter your email"
 							/>
-							<Button className="bg-green-500 text-white hover:bg-green-600" type="submit">
+							<Button
+								className="bg-green-500 text-white hover:bg-green-600"
+								type="submit"
+								onClick={() => {
+									navigate("/sign-up")
+								}}
+							>
 								Sign Up
 							</Button>
 						</form>

@@ -95,7 +95,7 @@ const Clients = () => {
 				toast({
 					title: `Client successfully deleted.`,
 					description: `${client.company_name} was successfully deleted.`,
-					variant: "default", 
+					variant: "default",
 				})
 			}
 		} catch (e: any) {
@@ -214,7 +214,7 @@ const Clients = () => {
 						defaultValue={user?.userType === "Fund Manager" ? "clients" : "overview"}
 						className="mb-6 rounded-md bg-white shadow-md"
 					>
-						<div className="p-4">
+						<div className="flex justify-between p-4">
 							<TabsList className="border border-slate-400 bg-gradient-to-r from-green-100 to-sky-100">
 								<TabsTrigger
 									value="overview"
@@ -231,6 +231,9 @@ const Clients = () => {
 									</TabsTrigger>
 								)}
 							</TabsList>
+							<div className="flex justify-end px-4">
+								<Button>Add Client</Button>
+							</div>
 						</div>
 						<TabsContent value="overview">
 							<Card className="">
@@ -243,6 +246,7 @@ const Clients = () => {
 								</CardContent>
 							</Card>
 						</TabsContent>
+
 						{isFundManager && (
 							<TabsContent value="clients">
 								<Card className="">
