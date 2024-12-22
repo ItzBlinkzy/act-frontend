@@ -27,15 +27,26 @@ export default function Sidebar() {
 					requiresFundManager: true,
 				},
 				{
+					route: "/dashboard/notifications",
+					icon: <BellIcon />,
+					text: "Notifications",
+					requiresFundManager: false,
+				},
+			],
+		},
+		{
+			group: "AI",
+			items: [
+				{
 					route: "/dashboard/ai",
 					icon: <SparklesIcon />,
 					text: "Agentic AI",
 					requiresFundManager: false,
 				},
 				{
-					route: "/dashboard/notifications",
-					icon: <BellIcon />,
-					text: "Notifications",
+					route: "/dashboard/ai/chat",
+					icon: <SparklesIcon />,
+					text: "AI Chat",
 					requiresFundManager: false,
 				},
 			],

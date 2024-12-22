@@ -85,6 +85,8 @@ export default function RecommendationsPage() {
 	const [recommendations, setRecommendations] = useState<Recommendation[]>(sampleRecommendations)
 	const [isLoading, setIsLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
+	// const user = useStore((state) => state.user)
+	// const managerClients = useStore((state) => state.managerClients)
 
 	const fetchRecommendations = async () => {
 		setIsLoading(true)
