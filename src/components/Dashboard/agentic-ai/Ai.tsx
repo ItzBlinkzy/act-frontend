@@ -16,7 +16,6 @@ import {
 	DialogTrigger,
 } from "@/components/ui/dialog"
 import Sidebar from "../Sidebar"
-
 interface Recommendation {
 	id: string
 	symbol: string
