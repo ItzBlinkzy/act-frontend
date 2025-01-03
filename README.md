@@ -2,7 +2,15 @@
 
 ## Overview
 
-## As part of our third-year group project, I developed the frontend for our AI-driven agentic trading application. This frontend serves as a critical component of our system, built using React and TypeScript.
+ As part of our third-year group project, I developed the frontend for our AI-driven agentic trading application. This frontend serves as a critical component of our system, built using React and TypeScript.
+
+---
+
+## Architecture
+
+Our architecture diagram primaily focusing on the frontend.
+
+![Architecture Diagram](https://github.com/user-attachments/assets/bb904a95-9d83-45f7-ba39-9e156c5d0fca)
 
 ## How to Run
 
@@ -21,14 +29,6 @@ Before deploying, build the application and check for TypeScript errors using:
 ```bash
 npm run build
 ```
-
----
-
-## Architecture
-
-Our architecture diagram primaily focusing on the frontend.
-
-![Architecture Diagram](https://github.com/user-attachments/assets/bb904a95-9d83-45f7-ba39-9e156c5d0fca)
 
 ---
 
