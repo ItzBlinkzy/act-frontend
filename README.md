@@ -4,6 +4,8 @@
 
  As part of our third-year group project, I developed the frontend for our AI-driven agentic trading application. This frontend serves as a critical component of our system, built using React and TypeScript.
 
+https://act-frontend.netlify.app
+
 ---
 
 ## Architecture
