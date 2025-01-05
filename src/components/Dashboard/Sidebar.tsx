@@ -20,6 +20,17 @@ export default function Sidebar() {
 					text: "Profile",
 					requiresFundManager: false,
 				},
+				// {
+				// 	route: "/dashboard/notifications",
+				// 	icon: <BellIcon />,
+				// 	text: "Notifications",
+				// 	requiresFundManager: false,
+				// },
+			],
+		},
+		{
+			group: "Assets",
+			items: [
 				{
 					route: "/dashboard/clients",
 					icon: <Users2 />,
@@ -27,10 +38,9 @@ export default function Sidebar() {
 					requiresFundManager: true,
 				},
 				{
-					route: "/dashboard/notifications",
-					icon: <BellIcon />,
-					text: "Notifications",
-					requiresFundManager: false,
+					route: "/dashboard/assets",
+					icon: <Eye />,
+					text: "Stocks & Crypto",
 				},
 			],
 		},
@@ -51,16 +61,7 @@ export default function Sidebar() {
 				},
 			],
 		},
-		{
-			group: "Purchase Assets",
-			items: [
-				{
-					route: "/dashboard/assets",
-					icon: <Eye />,
-					text: "Stocks & Crypto",
-				},
-			],
-		},
+
 		{
 			group: "Settings",
 			items: [
