@@ -67,14 +67,14 @@ const routes = [
 			</Protected>
 		),
 	},
-	{
-		path: "/dashboard/notifications",
-		element: (
-			<Protected>
-				<Notifications />
-			</Protected>
-		),
-	},
+	// {
+	// 	path: "/dashboard/notifications",
+	// 	element: (
+	// 		<Protected>
+	// 			<Notifications />
+	// 		</Protected>
+	// 	),
+	// },
 	{
 		path: "/dashboard/credit",
 		element: (
@@ -83,7 +83,7 @@ const routes = [
 			</Protected>
 		),
 	},
-  {
+	{
 		path: "/dashboard/ai/chat",
 		element: (
 			<Protected>

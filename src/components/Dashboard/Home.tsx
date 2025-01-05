@@ -1,12 +1,13 @@
+import { useEffect, useState } from "react"
 import Sidebar from "@/components/Dashboard/Sidebar"
 import useStore from "@/store/useStore"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Button } from "@/components/ui/button"
-import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { HomeIcon } from "lucide-react"
 import { toast } from "@/hooks/use-toast"
+import { baseAiUrl } from "@/config/constants"
 
 interface BlogPost {
 	id: number
@@ -18,6 +19,7 @@ interface Stock {
 	symbol: string
 	name: string
 	value: number
+	isUp?: boolean // Indicates whether the price went up
 }
 
 const DashboardHome = () => {
@@ -25,8 +27,39 @@ const DashboardHome = () => {
 	const [topStocks, setTopStocks] = useState<Stock[]>([])
 	const user = useStore((state) => state.user)
 	const managerClients = useStore((state) => state.managerClients)
+
+	const fetchStockData = async () => {
+		try {
+			const tickers = ["AAPL", "MSFT", "GOOGL", "AMZN", "META", "TSLA", "RGTI", "NVDA", "JPM", "JNJ"]
+			const response = await fetch(`${baseAiUrl}/get_stock_prices`, {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ stock_tickers: tickers }),
+			})
+			const data = await response.json()
+			console.log(data.stocks.map((el: any) => console.log(el.currentPrice)))
+			const updatedStocks = data.stocks.map((stock: any) => {
+				const previous = topStocks.find((s) => s.symbol === stock.ticker)
+				return {
+					symbol: stock.ticker,
+					name: stock.shortName,
+					value: stock.currentPrice,
+					isUp: previous ? stock.currentPrice > previous.value : undefined,
+				}
+			})
+			setTopStocks(updatedStocks)
+		} catch (error) {
+			toast({
+				title: "Error updating stocks",
+				description: "An error occurred while updating the stocks.",
+				variant: "destructive",
+			})
+		}
+	}
+
 	useEffect(() => {
-		console.log(user, managerClients)
 		setRecentPosts([
 			{ id: 1, title: "Understanding Market Trends", excerpt: "An in-depth look at current market trends..." },
 			{
@@ -41,18 +74,7 @@ const DashboardHome = () => {
 			},
 		])
 
-		setTopStocks([
-			{ symbol: "AAPL", name: "Apple Inc.", value: 150.69 },
-			{ symbol: "MSFT", name: "Microsoft Corporation", value: 305.69 },
-			{ symbol: "GOOGL", name: "Alphabet Inc.", value: 2750.69 },
-			{ symbol: "AMZN", name: "Amazon.com Inc.", value: 3380.69 },
-			{ symbol: "FB", name: "Meta Platforms Inc.", value: 330.69 },
-			{ symbol: "TSLA", name: "Tesla Inc.", value: 850.69 },
-			{ symbol: "BRK.A", name: "Berkshire Hathaway Inc.", value: 439520.69 },
-			{ symbol: "NVDA", name: "NVIDIA Corporation", value: 220.69 },
-			{ symbol: "JPM", name: "JPMorgan Chase & Co.", value: 160.69 },
-			{ symbol: "JNJ", name: "Johnson & Johnson", value: 170.69 },
-		])
+		fetchStockData()
 	}, [])
 
 	return (
@@ -135,7 +157,7 @@ const DashboardHome = () => {
 									>
 										<h3 className="font-bold text-green-700">{stock.symbol}</h3>
 										<p className="text-sky-600">{stock.name}</p>
-										<p className="font-semibold text-green-600">${stock.value.toFixed(2)}</p>
+										<p className="font-semibold text-green-600">${stock.value}</p>
 									</div>
 								))}
 							</div>
