@@ -2,7 +2,7 @@
 
 ## Overview
 
- As part of our third-year group project, I developed the frontend for our AI-driven agentic trading application. This frontend serves as a critical component of our system, built using React and TypeScript.
+As part of our third-year group project, I developed the frontend for our AI-driven agentic trading application. This frontend serves as a critical component of our system, built using React and TypeScript.
 
 https://act-frontend.netlify.app
 
@@ -72,6 +72,6 @@ _Preview of most of the website's pages_
 
 ---
 
-## TODO
+## Testing
 
-- A test account will be set up, allowing anyone to log in and explore the website with dummy data.
+- Login with Google or Github to test the website.

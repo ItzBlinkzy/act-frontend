@@ -33,7 +33,7 @@ const Login = () => {
   useEffect(() => {
     // default login method is no social login until they click either login social buttons
     setUsingSocialLogin(false)
-  }, [])
+  })
 
 	const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setEmail(event.target.value)
